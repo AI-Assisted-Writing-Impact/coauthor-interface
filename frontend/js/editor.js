@@ -172,6 +172,14 @@ function setupEditorMachineOnly() {
           return true;
         }
       }
+    },
+    f1: {
+      key: 112, // Keycode for Control
+      handler: function() {
+        logEvent(EventName.SUGGESTION_GET, EventSource.USER);
+        queryGPT4ForSuggestions();
+
+      }
     }
   };
 
@@ -225,6 +233,13 @@ function setupEditor() {
           return true;
         }
       }
+    },
+    f1: {
+      key: 112, // Keycode for Control
+      handler: function() {
+        logEvent(EventName.SUGGESTION_GET, EventSource.USER);
+        queryGPT4ForSuggestions();
+      }
     }
   };
 
@@ -252,6 +267,21 @@ function setupEditor() {
       },
     }
   });
+      // Function to update word count
+    function updateWordCount() {
+      // Get text content without trailing newline
+      const text = quill.getText().trim();
+      const wordCount = text.length; // Calculate word count (number of characters)
+      document.getElementById('word-count-value').textContent = wordCount;
+    }
+
+    // Listen for changes in the editor
+    quill.on('text-change', function() {
+      updateWordCount();
+    });
+
+    // Initialize word count on page load
+    updateWordCount();
 
   trackTextChanges();
   trackSelectionChange();
@@ -318,4 +348,15 @@ function appendText(text) {
   // By default, selection change due to text insertion is "silent"
   // and not saved as part of logs
   setCursorAtTheEnd();
+}
+function showAlert(message) {
+  const alertBox = document.getElementById('alert-box');
+  const alertMessage = document.getElementById('alert-message');
+
+  if (alertBox && alertMessage) {
+    alertMessage.textContent = message; // 设置消息内容
+    alertBox.style.display = 'block'; // 显示弹框
+  } else {
+    console.error("Alert box or message element not found");
+  }
 }

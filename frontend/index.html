@@ -49,19 +49,6 @@
       </h1>
     </div>
 
-    <div id="shortcuts">
-      <div style="margin-bottom: 5px;">
-        <b>Keyboard shortcuts</b>
-        <span id="shortcuts-close-btn" class="close"><i class="fas fa-times"></i></span><br/>
-      </div>
-      <div>
-        <span class="key" style="margin-right: 5px;">Tab</span> Get suggestions</br>
-        <span class="key">Shift</span> + <span class="key" style="margin-right: 5px;">Tab</span> Reopen suggestions<br/>
-        <span class="key">↑</span><span class="key" style="margin-right: 5px;">↓</span> Navigate suggestion<br/>
-        <span class="key" style="margin-right: 5px;">Enter</span> Select suggestion
-      </div>
-    </div>
-
     <div id="control">
       <form class="form-inline">
         <div class="form-group mx-sm-2">
@@ -112,15 +99,54 @@
         </div>
       </form>
     </div>
+    <div id="instructions-section" class="container mt-4">
+      <h3>Instructions</h3>
+      <p>In this task, you will write two essays in response to two different prompts. Please follow these guidelines:</p>
+      <ul>
+        <li>Write naturally and spontaneously, and avoid overthinking or making the writing overly formal.</li>
+        <li>Each essay should be at least 500 words.</li>
+        <li>Do not use any editing tools, grammar checkers, or other external resources to assist your writing.</li>
+        <li>Spend no more than 40 minutes per essay.</li>
+      </ul>
+      <p>You will see each prompt one at a time. Once you finish the first essay, you will proceed to the second prompt.</p>
+    </div>
+
+    <div id="prompt-section" class="container mt-4">
+      <h3>Prompt</h3>
+      <p id="prompt-text"></p>
+    </div>
 
     <div id="frontend">
+      <div id="shortcuts">
+      <div style="margin-bottom: 5px;">
+        <b>Keyboard shortcuts</b>
+        <span id="shortcuts-close-btn" class="close"><i class="fas fa-times"></i></span><br/>
+      </div>
+      <div>
+        <span class="key" style="margin-right: 5px;">Tab</span> Get suggestions</br>
+        <span class="key">Shift</span> + <span class="key" style="margin-right: 5px;">Tab</span> Reopen suggestions<br/>
+        <span class="key">↑</span><span class="key" style="margin-right: 5px;">↓</span> Navigate suggestion<br/>
+        <span class="key" style="margin-right: 5px;">Enter</span> Select suggestion</br>
+        <span class="key" style="margin-right: 5px;">F1</span> Grammar and style revision</br>
+
+      </div>
+    </div>
       <div id="editor-view">
         <div id="editor-container">
+        </div>
+        <div id="word-count">
+          Word Count: <span id="word-count-value">0</span>
         </div>
       </div>
     </div>
 
+
     <div id="frontend-overlay" class="dropdown-menu hidden">
+    </div>
+
+    <div id="alert-box" style="display: none; padding: 40px 20px 20px; border: 1px solid #ccc;">
+      <button id="close-btn" style="float: right; background: none; border: none; font-size: 18px; cursor: pointer;">&times;</button>
+      <p id="alert-message"></p>
     </div>
 
     <!-- Footer -->

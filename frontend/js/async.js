@@ -333,7 +333,22 @@ function getDataForQuery(doc, exampleText) {
 function queryGPT3() {
   const doc = getText();
   const exampleText = exampleActualText;
+  // 定义 instructions 和 prompt
+  const instructions = `In this task, you will write two essays in response to two different prompts. Please follow these guidelines:
+Write naturally and spontaneously, and avoid overthinking or making the writing overly formal.
+Each essay should be at least 500 words.
+Do not use any editing tools, grammar checkers, or other external resources to assist your writing.
+Spend no more than 40 minutes per essay.
+You will see each prompt one at a time. Once you finish the first essay, you will proceed to the second prompt.`;
+
+  const prompt = `Everyone’s on social media these days, but does it actually help people stay connected, or does it just make us feel more alone? What’s your take on it? Have you noticed a difference in your own friendships?`;
+
+  // 创建 data 对象
   const data = getDataForQuery(doc, exampleText);
+  data.instructions = instructions; // 添加 instructions
+  data.prompt = prompt; // 添加 prompt
+  let type = getType();
+  data.type = type;
 
   $.ajax({
     url: serverURL + '/api/query',
@@ -380,4 +395,71 @@ function queryGPT3() {
       alert("Could not get suggestions. Press tab key to try again! If the problem persists, please send a screenshot of this message to " + contactEmail + ". Our sincere apologies for the inconvenience!");
     }
   });
+}
+
+function queryGPT4ForSuggestions() {
+  const doc = getText();
+  const exampleText = exampleActualText;
+  // 定义 instructions 和 prompt
+  const instructions = `In this task, you will write two essays in response to two different prompts. Please follow these guidelines:
+Write naturally and spontaneously, and avoid overthinking or making the writing overly formal.
+Each essay should be at least 500 words.
+Do not use any editing tools, grammar checkers, or other external resources to assist your writing.
+Spend no more than 40 minutes per essay.
+You will see each prompt one at a time. Once you finish the first essay, you will proceed to the second prompt.`;
+
+  const prompt = `Everyone’s on social media these days, but does it actually help people stay connected, or does it just make us feel more alone? What’s your take on it? Have you noticed a difference in your own friendships?`;
+
+  // 创建 data 对象
+  const data = getDataForQuery(doc, exampleText);
+  data.instructions = instructions; // 添加 instructions
+  data.prompt = prompt; // 添加 prompt
+  data.type = 'grammar'
+
+   $.ajax({
+    url: serverURL + '/api/query',
+    beforeSend: function() {
+      hideDropdownMenu(EventSource.API);
+      setCursorAtTheEnd();
+      showLoadingSignal('Getting suggestions...');
+    },
+    type: 'POST',
+    dataType: 'json',
+    data: JSON.stringify(data),
+    crossDomain: true,
+    contentType: 'application/json; charset=utf-8',
+    success: function(data) {
+      hideLoadingSignal();
+      if (data.status == SUCCESS) {
+        if (data.original_suggestions.length > 0) {
+          originalSuggestions = data.original_suggestions;
+        } else {
+          originalSuggestions = [];
+        }
+
+        if (data.suggestions_with_probabilities.length > 0) {
+          addSuggestionsToDropdown(data.suggestions_with_probabilities);
+          showDropdownMenu('api');
+        } else {
+          let msg = 'Please try again!\n\n'
+                    + 'Why is this happening? The system\n'
+                    + '- could not think of suggestions (' + data.counts.empty_cnt + ')\n'
+                    + '- generated same suggestions as before (' + data.counts.duplicate_cnt + ')\n'
+                    + '- generated suggestions that contained banned words (' + data.counts.bad_cnt + ')\n';
+          console.log(msg);
+
+          logEvent(EventName.SUGGESTION_FAIL, EventSource.API, textDelta=msg);
+          alert("The system could not generate suggestions. Please try again.");
+        }
+
+      } else {
+        alert(data.message);
+      }
+    },
+    error: function() {
+      hideLoadingSignal();
+      alert("Could not get suggestions. Press tab key to try again! If the problem persists, please send a screenshot of this message to " + contactEmail + ". Our sincere apologies for the inconvenience!");
+    }
+  });
+
 }

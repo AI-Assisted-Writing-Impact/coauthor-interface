@@ -33,6 +33,13 @@ function getAccessCode(){
   return accessCode;
 }
 
+function getType(){
+  let urlString = window.location.href;
+  let url = new URL(urlString);
+  let type = url.searchParams.get("type");
+  return type;
+}
+
 function getSessionId(){
   let urlString = window.location.href;
   let url = new URL(urlString);

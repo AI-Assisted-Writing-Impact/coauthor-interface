@@ -31,6 +31,9 @@ from parsing import (
 from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 
+import nltk
+nltk.download('punkt')
+
 warnings.filterwarnings("ignore", category=FutureWarning)  # noqa
 
 SESSIONS = dict()
@@ -51,10 +54,15 @@ def start_session():
     global examples, prompts
     examples = read_examples(config_dir)
     prompts = read_prompts(config_dir)
+
     allowed_access_codes = read_access_codes(config_dir)
+    print("Allowed access codes:", allowed_access_codes)
+
 
     # Check access codes
     access_code = content['accessCode']
+    print("Received access code:", access_code)
+
     if access_code not in allowed_access_codes:
         if not access_code:
             access_code = '(not provided)'
@@ -69,13 +77,23 @@ def start_session():
     session_id = get_uuid()  # Generate unique session ID
     verification_code = session_id
 
+    # Ensure model engine from access_codes config
+    model_name = getattr(config, 'engine', 'gpt-3.5-turbo').strip()
+
     # Information returned to user
+    # result = {
+    #     'access_code': acçcess_code,
+    #     'session_id': session_id,
+    #
+    #     'example_text': examples[config.example],
+    #     'prompt_text': prompts[config.prompt],
+    # }
     result = {
         'access_code': access_code,
         'session_id': session_id,
-
         'example_text': examples[config.example],
         'prompt_text': prompts[config.prompt],
+        'engine': model_name
     }
     result.update(config.convert_to_dict())
 
@@ -93,7 +111,9 @@ def start_session():
     result['status'] = SUCCESS
 
     session = SESSIONS[session_id]
-    model_name = result['engine'].strip()
+    # model_name = result['engine'].strip()
+    model_name = getattr(config, 'engine', 'gpt-3.5-turbo').strip()
+
     domain = result['domain'] if 'domain' in result else ''
 
     append_session_to_file(session, metadata_path)
@@ -152,6 +172,7 @@ def query():
     session_id = content['session_id']
     domain = content['domain']
     prev_suggestions = content['suggestions']
+    query_type = content.get('type', 'default')  # 类型参数：default 或 grammar
 
     results = {}
     try:
@@ -165,10 +186,15 @@ def query():
         results['message'] = f'Your session has not been established due to invalid access code. Please check your access code in URL.'
         return jsonify(results)
 
-    example = content['example']
-    example_text = examples[example]
+    # Get example text
+    example = content.get('example', '')
+    example_text = examples.get(example, '')
 
-    # Overwrite example text if it is manually provided
+    # Extract Instructions and Prompt from request
+    instructions = content.get('instructions', 'No instructions provided.')
+    prompt_text = content.get('prompt', 'No prompt provided.')
+
+    # Overwrite example text if provided
     if 'example_text' in content:
         example_text = content['example_text']
 
@@ -195,99 +221,121 @@ def query():
 
     # Parse doc
     doc = content['doc']
-    results = parse_prompt(example_text + doc, max_tokens, context_window_size)
-    prompt = results['effective_prompt']
 
-    # Query GPT-3
-    try:
-        if "---" in prompt: # If the demarcation is there, then suggest an insertion
-            prompt, suffix = prompt.split("---")
-            response = openai.Completion.create(
-                engine=engine,
-                prompt=prompt,
-                suffix=suffix,
-                n=n,
-                max_tokens=max_tokens,
-                temperature=temperature,
-                top_p=top_p,
-                presence_penalty=presence_penalty,
-                frequency_penalty=frequency_penalty,
-                logprobs=10,
-                stop=stop_sequence,
-            )
+    if query_type == 'grammar':
+        messages = [
+            {
+                "role": "system",
+                "content": "You are an AI assistant that provides grammar and style suggestions. "
+                           "Only return the modified version of the text if changes are made."
+            },
+            {
+                "role": "user",
+                "content": f"Please provide grammar and style suggestions for the following text:\n\n{doc}"
+            }
+        ]
+        max_tokens = 1500  # Adjust max tokens for grammar suggestions
+    else:
+        results = parse_prompt(doc, max_tokens, context_window_size)
+        prompt = results['effective_prompt']
+        if query_type == 'c' or query_type == 'd':
+            messages = [
+                {
+                    "role": "system",
+                    "content": f"You are a writing assistant. Write approximately 250 words to continue the given text. Ensure the continuation is coherent, relevant, and does not stop prematurely. Follow these instructions:\n\n"
+                               f"{instructions}\n\n"
+                               f"Prompt:\n{prompt_text}\n\n"
+                },
+                {
+                    "role": "user",
+                    "content": f"Here is the text to continue:\n\n{prompt}"
+                }
+            ]
+            max_tokens = 500
         else:
-            response = openai.Completion.create(
-                engine=engine,
-                prompt=prompt,
-                n=n,
-                max_tokens=max_tokens,
-                temperature=temperature,
-                top_p=top_p,
-                presence_penalty=presence_penalty,
-                frequency_penalty=frequency_penalty,
-                logprobs=10,
-                stop=stop_sequence,
-            )
-        suggestions = []
-        for choice in response['choices']:
-            suggestion = parse_suggestion(
-                choice.text,
-                results['after_prompt'],
-                stop_rules
-            )
-            probability = parse_probability(choice.logprobs)
-            suggestions.append((suggestion, probability, engine))
+            messages = [
+                {
+                    "role": "system",
+                    "content": f"You are a writing assistant. Continue the text with exactly one relevant and complete sentence. Follow these instructions:\n\n"
+                               f"{instructions}\n\n"
+                               f"Prompt:\n{prompt_text}\n\n"
+                },
+                {
+                    "role": "user",
+                    "content": f"Here is the text to continue:\n\n{prompt}"
+                }
+            ]
+    try:
+        response = openai.ChatCompletion.create(
+            model=engine,
+            messages=messages,
+            n=n if query_type != 'grammar' else 1,
+            max_tokens=max_tokens,
+            temperature=temperature,
+            top_p=top_p,
+            presence_penalty=presence_penalty,
+            frequency_penalty=frequency_penalty,
+            stop=["\n"] if query_type != 'grammar' or query_type != 'c' else None  # Ensure one sentence for default query
+        )
+        print(response, 'response')
+
+        continuations = [
+            choice['message']['content'].strip() for choice in response['choices']
+        ]
+
+        # Build results in the required format
+        results = {
+            'status': SUCCESS,
+            'original_suggestions': [
+                {
+                    "original": c,
+                    "trimmed": c.strip(),
+                    "probability": None,  # logprobs not available for ChatCompletion
+                    "source": engine
+                }
+                for c in continuations
+            ],
+            'suggestions_with_probabilities': [
+                {
+                    "index": idx,
+                    "original": c,
+                    "trimmed": c.strip(),
+                    "probability": None,
+                    "source": engine
+                }
+                for idx, c in enumerate(continuations)
+            ],
+            'ctrl': {
+                'n': n,
+                'max_tokens': max_tokens,
+                'temperature': temperature,
+                'top_p': top_p,
+                'presence_penalty': presence_penalty,
+                'frequency_penalty': frequency_penalty,
+                'stop': stop,
+            },
+            'counts': {
+                'empty': 0 if continuations else 1
+            }
+        }
+    except openai.error.AuthenticationError as e:
+        results = {
+            'status': FAILURE,
+            'message': f"Authentication error: {str(e)}"
+        }
+    except openai.error.InvalidRequestError as e:
+        results = {
+            'status': FAILURE,
+            'message': f"Invalid request error: {str(e)}"
+        }
     except Exception as e:
-        results['status'] = FAILURE
-        results['message'] = str(e)
+        results = {
+            'status': FAILURE,
+            'message': f"An error occurred: {str(e)}"
+        }
         print(e)
-        return jsonify(results)
 
-    # Always return original model outputs
-    original_suggestions = []
-    for index, (suggestion, probability, source) in enumerate(suggestions):
-        original_suggestions.append({
-            'original': suggestion,
-            'trimmed': suggestion.strip(),
-            'probability': probability,
-            'source': source,
-        })
-
-    # Filter out model outputs for safety
-    filtered_suggestions, counts = filter_suggestions(
-        suggestions,
-        prev_suggestions,
-        blocklist,
-    )
-
-    random.shuffle(filtered_suggestions)
-
-    suggestions_with_probabilities = []
-    for index, (suggestion, probability, source) in enumerate(filtered_suggestions):
-        suggestions_with_probabilities.append({
-            'index': index,
-            'original': suggestion,
-            'trimmed': suggestion.strip(),
-            'probability': probability,
-            'source': source,
-        })
-
-    results['status'] = SUCCESS
-    results['original_suggestions'] = original_suggestions
-    results['suggestions_with_probabilities'] = suggestions_with_probabilities
-    results['ctrl'] = {
-        'n': n,
-        'max_tokens': max_tokens,
-        'temperature': temperature,
-        'top_p': top_p,
-        'presence_penalty': presence_penalty,
-        'frequency_penalty': frequency_penalty,
-        'stop': stop,
-    }
-    results['counts'] = counts
-    print_verbose('Result', results, verbose)
     return jsonify(results)
-
 
 @app.route('/api/get_log', methods=['POST'])
 @cross_origin(origin='*')

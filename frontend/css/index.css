@@ -21,7 +21,6 @@
 html, body {
   margin: 0;
   height: 100%;
-  overflow: hidden;
 }
 
 #header {
@@ -39,8 +38,8 @@ html, body {
 #shortcuts {
   display: inline;
   position: absolute;
-  top: 100px;
-  right: 40px;
+  top: 0px;
+  right: -250px;
   width: 230px;
   background-color: #f5f5f5;
   margin: 10px auto;
@@ -115,7 +114,6 @@ html, body {
 }
 
 #footer {
-  position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
@@ -222,4 +220,43 @@ ol, ul {
     border-radius: 4px;
     background-color: rgba(0,0,0,.5);
     -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+}
+
+#instructions-section, #prompt-section {
+  border: 1px solid #ddd;
+  padding: 20px;
+  margin-bottom: 20px;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+}
+
+#instructions-section h3, #prompt-section h3 {
+  margin-bottom: 10px;
+}
+
+#alert-box {
+  display: none; /* 默认隐藏 */
+  position: fixed; /* 固定位置 */
+  top: 50%; /* 居中 */
+  left: 50%;
+  transform: translate(-50%, -50%); /* 水平和垂直居中 */
+  z-index: 1000; /* 显示在最上层 */
+  padding: 20px; /* 内边距 */
+  background-color: white; /* 背景颜色 */
+  border: 1px solid #ccc; /* 边框 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 添加阴影 */
+  border-radius: 10px; /* 圆角 */
+  font-family: Arial, sans-serif; /* 字体 */
+  width: 300px; /* 固定宽度 */
+  text-align: center; /* 文本居中 */
+}
+
+#alert-box button#close-btn {
+  position: absolute; /* 绝对定位 */
+  top: 5px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
 }

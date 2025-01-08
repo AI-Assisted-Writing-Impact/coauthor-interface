@@ -1,6 +1,10 @@
 $(function() {
   startBlinking();
 
+    // 添加文字到 p 标签中
+  const promptText = "Everyone’s on social media these days, but does it actually help people stay connected, or does it just make us feel more alone? What’s your take on it? Have you noticed a difference in your own friendships?";
+  document.getElementById("prompt-text").innerText = promptText;
+
   if (condition == 'human') {
     setupEditorHumanOnly();
   } else if (condition == 'machine') {
@@ -110,4 +114,13 @@ $(function() {
   $('#finish-replay-btn').click(function(e) {
     endSessionWithReplay();
   });
+
+    $('#close-btn').click(function(e) {
+        const alertBox = document.getElementById('alert-box');
+              if (alertBox) {
+                alertBox.style.display = 'none'; // 隐藏弹框
+              }
+      });
+
+
 });
