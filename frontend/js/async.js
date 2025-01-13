@@ -398,9 +398,44 @@ You will see each prompt one at a time. Once you finish the first essay, you wil
 }
 
 function queryGPT4ForSuggestions() {
-  const doc = getText();
+//  const doc = getText();
+ const range = quill.getSelection(); // 获取光标位置
+    if (!range) {
+    alert("请将光标放在句子中以检查语法。");
+    return;
+    }
+
+    const text = quill.getText(); // 获取编辑器的全文
+    const cursorIndex = range.index; // 光标位置
+
+    const findSentenceBoundary = (text, cursorIndex) => {
+      // 找到最近的句号或问号作为句子起点
+      const start = Math.max(
+        text.lastIndexOf('.', cursorIndex - 1),
+        text.lastIndexOf('?', cursorIndex - 1)
+      ) + 1 || 0;
+
+      // 找到最近的句号或问号作为句子终点
+      const end = Math.min(
+        text.indexOf('.', cursorIndex) === -1 ? text.length : text.indexOf('.', cursorIndex),
+        text.indexOf('?', cursorIndex) === -1 ? text.length : text.indexOf('?', cursorIndex)
+      );
+      return {
+        start,
+        end: end !== -1 ? end + 1 : text.length // 如果找不到终点符号，就使用文本末尾
+      };
+    };
+
+    // 使用 findSentenceBoundary 函数
+    const { start, end } = findSentenceBoundary(text, cursorIndex);
+    const doc = text.slice(start, end).trim(); // 提取当前句子
+
+    if (!doc) {
+        alert("未找到句子，请将光标放在句子中。");
+        return;
+    }
   const exampleText = exampleActualText;
-  // 定义 instructions 和 prompt
+//  // 定义 instructions 和 prompt
   const instructions = `In this task, you will write two essays in response to two different prompts. Please follow these guidelines:
 Write naturally and spontaneously, and avoid overthinking or making the writing overly formal.
 Each essay should be at least 500 words.
@@ -410,7 +445,7 @@ You will see each prompt one at a time. Once you finish the first essay, you wil
 
   const prompt = `Everyone’s on social media these days, but does it actually help people stay connected, or does it just make us feel more alone? What’s your take on it? Have you noticed a difference in your own friendships?`;
 
-  // 创建 data 对象
+//  // 创建 data 对象
   const data = getDataForQuery(doc, exampleText);
   data.instructions = instructions; // 添加 instructions
   data.prompt = prompt; // 添加 prompt
@@ -438,8 +473,13 @@ You will see each prompt one at a time. Once you finish the first essay, you wil
         }
 
         if (data.suggestions_with_probabilities.length > 0) {
-          addSuggestionsToDropdown(data.suggestions_with_probabilities);
+          const updatedSuggestions = data.suggestions_with_probabilities.map(suggestion => ({
+            ...suggestion,
+            range: range, // 将 range 添加到每个 suggestion 中
+          }));
+          addSuggestionsToDropdown(updatedSuggestions);
           showDropdownMenu('api');
+
         } else {
           let msg = 'Please try again!\n\n'
                     + 'Why is this happening? The system\n'

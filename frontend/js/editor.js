@@ -271,7 +271,7 @@ function setupEditor() {
     function updateWordCount() {
       // Get text content without trailing newline
       const text = quill.getText().trim();
-      const wordCount = text.length; // Calculate word count (number of characters)
+      const wordCount = text.length > 0 ? text.split(/\s+/).filter(word => word.length > 0).length : 0;
       document.getElementById('word-count-value').textContent = wordCount;
     }
 
