@@ -16,7 +16,7 @@ class AccessCodeConfig:
 
         self.session_length = 0
 
-        self.n = 5
+        self.n = 3
         self.max_tokens = 1000
         # self.temperature = 0.95
         self.temperature = 0.7,  # 调低 temperature 使回答更稳定

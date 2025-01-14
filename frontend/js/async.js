@@ -401,7 +401,7 @@ function queryGPT4ForSuggestions() {
 //  const doc = getText();
  const range = quill.getSelection(); // 获取光标位置
     if (!range) {
-    alert("请将光标放在句子中以检查语法。");
+    alert("Please place the cursor in the sentence to check the grammar.");
     return;
     }
 
@@ -431,7 +431,7 @@ function queryGPT4ForSuggestions() {
     const doc = text.slice(start, end).trim(); // 提取当前句子
 
     if (!doc) {
-        alert("未找到句子，请将光标放在句子中。");
+        alert("Sentence not found, place the cursor in the sentence.");
         return;
     }
   const exampleText = exampleActualText;
