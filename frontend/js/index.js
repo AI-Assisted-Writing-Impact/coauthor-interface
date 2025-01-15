@@ -1,5 +1,23 @@
+function getUrlParameter(name) {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(name);
+}
 $(function() {
   startBlinking();
+
+  const type = getUrlParameter('type'); // 获取 URL 中的 type 参数
+
+  // 根据 type 参数显示或隐藏特定的功能
+  if (type === 'a') {
+    $('#suggestion').hide(); // 隐藏 suggestion
+    $('#grammar').show();    // 显示 grammar
+  } else if (type === 'b' || type === 'c' || type === 'd') {
+    $('#suggestion').show(); // 显示 suggestion
+    $('#grammar').hide();    // 隐藏 grammar
+  } else if (type === 'e') {
+    $('#shortcuts').hide();
+  }
+
 
     // 添加文字到 p 标签中
   const promptText = "Everyone’s on social media these days, but does it actually help people stay connected, or does it just make us feel more alone? What’s your take on it? Have you noticed a difference in your own friendships?";

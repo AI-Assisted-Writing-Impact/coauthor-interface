@@ -234,7 +234,7 @@ def query():
                 "content": f"Please provide grammar and style suggestions for the following text:\n\n{doc}"
             }
         ]
-        max_tokens = 1500  # Adjust max tokens for grammar suggestions
+        max_tokens = 500  # Adjust max tokens for grammar suggestions
     else:
         results = parse_prompt(doc, max_tokens, context_window_size)
         prompt = results['effective_prompt']
@@ -269,7 +269,7 @@ def query():
         response = openai.ChatCompletion.create(
             model=engine,
             messages=messages,
-            n=n if query_type != 'grammar' else 1,
+            n=3 if query_type != 'grammar' else 1,
             max_tokens=max_tokens,
             temperature=temperature,
             top_p=top_p,

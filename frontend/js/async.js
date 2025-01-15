@@ -407,24 +407,58 @@ function queryGPT4ForSuggestions() {
 
     const text = quill.getText(); // 获取编辑器的全文
     const cursorIndex = range.index; // 光标位置
-
     const findSentenceBoundary = (text, cursorIndex) => {
-      // 找到最近的句号或问号作为句子起点
-      const start = Math.max(
-        text.lastIndexOf('.', cursorIndex - 1),
-        text.lastIndexOf('?', cursorIndex - 1)
-      ) + 1 || 0;
+      // 去掉首尾的空格以提高准确性
+      const trimmedText = text.trim();
+      const trimmedCursorIndex = cursorIndex - (text.length - trimmedText.length);
 
-      // 找到最近的句号或问号作为句子终点
-      const end = Math.min(
-        text.indexOf('.', cursorIndex) === -1 ? text.length : text.indexOf('.', cursorIndex),
-        text.indexOf('?', cursorIndex) === -1 ? text.length : text.indexOf('?', cursorIndex)
-      );
+      // 找到最近的句子起点标点符号（句号或问号）
+      const lastPeriod = trimmedText.lastIndexOf('.', trimmedCursorIndex - 1);
+      const lastQuestionMark = trimmedText.lastIndexOf('?', trimmedCursorIndex - 1);
+      const start = Math.max(lastPeriod, lastQuestionMark) + 1 || 0;
+
+      // 找到最近的句子终点标点符号
+      const nextPeriod = trimmedText.indexOf('.', trimmedCursorIndex);
+      const nextQuestionMark = trimmedText.indexOf('?', trimmedCursorIndex);
+      const endCandidates = [
+        nextPeriod === -1 ? trimmedText.length : nextPeriod,
+        nextQuestionMark === -1 ? trimmedText.length : nextQuestionMark,
+      ];
+      const end = Math.min(...endCandidates);
+
+    debugger
+      // 特殊情况处理：光标在文本末尾或空格中
+      if (start === 0 && end === trimmedText.length) {
+        if (trimmedCursorIndex >= trimmedText.length) {
+          // 光标位于文本的最后
+          const previousSentenceEnd = Math.max(lastPeriod, lastQuestionMark);
+          const previousSentenceStart = Math.max(
+            trimmedText.lastIndexOf('.', previousSentenceEnd - 1),
+            trimmedText.lastIndexOf('?', previousSentenceEnd - 1)
+          ) + 1 || 0;
+
+          return {
+            start: previousSentenceStart,
+            end: previousSentenceEnd + 1,
+          };
+        }
+
+        // 如果没有有效的标点符号，且光标在空格中，则将整个文本视为一个句子
+        return {
+          start: 0,
+          end: trimmedText.length,
+        };
+      }
+
+      // 返回有效句子的边界
       return {
         start,
-        end: end !== -1 ? end + 1 : text.length // 如果找不到终点符号，就使用文本末尾
+        end: end !== -1 ? end + 1 : trimmedText.length, // 包含句号或问号
       };
     };
+
+
+
 
     // 使用 findSentenceBoundary 函数
     const { start, end } = findSentenceBoundary(text, cursorIndex);
