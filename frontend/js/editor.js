@@ -144,6 +144,7 @@ function setupEditorHumanOnly() {
 						]
 					]
       },
+      toolbar: false
     }
   });
 
@@ -205,6 +206,7 @@ function setupEditorMachineOnly() {
 						]
 					]
       },
+      toolbar: false
     }
   });
 
@@ -265,6 +267,7 @@ function setupEditor() {
 						]
 					]
       },
+      toolbar: false
     }
   });
       // Function to update word count

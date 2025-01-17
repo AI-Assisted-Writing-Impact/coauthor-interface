@@ -24,46 +24,54 @@ function hideDropdownMenu(source) {
   }
 }
 
-function selectDropdownItem(suggestion, range){
+function selectDropdownItem(suggestion, range) {
   // Close dropdown menu after selecting new suggestion
   logEvent(EventName.SUGGESTION_SELECT, EventSource.USER);
   hideDropdownMenu(EventSource.API);
+
   if ($('.dropdown-item').length === 1) {
     // 获取光标位置和当前文本内容
-      const text = quill.getText();
+    const text = quill.getText();
 
-      if (range) {
-        const cursorIndex = range.index;
+    if (range) {
+      const cursorIndex = range.index;
 
-        // 找到当前句子的起始位置，支持句号和问号
-        const start = Math.max(
-            text.lastIndexOf('.', cursorIndex - 1),
-            text.lastIndexOf('?', cursorIndex - 1)
-        ) + 1 || 0; // 找到最近的句号或问号作为起点
+      // 找到当前句子的起始位置，支持句号和问号
+      let start = Math.max(
+        text.lastIndexOf('.', cursorIndex - 1),
+        text.lastIndexOf('?', cursorIndex - 1)
+      ) + 1;
 
-        // 找到当前句子的结束位置，支持句号和问号
-        const end = Math.min(
-            text.indexOf('.', cursorIndex) === -1 ? text.length : text.indexOf('.', cursorIndex),
-            text.indexOf('?', cursorIndex) === -1 ? text.length : text.indexOf('?', cursorIndex)
-        ) + 1;
-
-        // 替换光标所在句子的内容
-        quill.deleteText(start, end - start); // 删除当前句子
-        quill.insertText(start, suggestion); // 插入新的建议
-        quill.setSelection(start + suggestion.length, 0); // 将光标移动到新句子末尾
+      // 保留句子起点之前的空格
+      while (start > 0 && text[start - 1] === ' ') {
+        start--;
       }
-  }
-  else {
-    appendText(suggestion);
 
+      // 找到当前句子的结束位置，支持句号和问号
+      const end = Math.min(
+        text.indexOf('.', cursorIndex) === -1 ? text.length : text.indexOf('.', cursorIndex),
+        text.indexOf('?', cursorIndex) === -1 ? text.length : text.indexOf('?', cursorIndex)
+      ) + 1;
+
+      // 获取当前句子前面的空格
+      const leadingSpaces = text.slice(start, cursorIndex).match(/^\s*/)[0];
+
+      // 替换光标所在句子的内容
+      quill.deleteText(start, end - start); // 删除当前句子
+      quill.insertText(start, leadingSpaces + suggestion, { color: '#4169E1' }); // 插入新的建议并保留空格
+      quill.setSelection(start + leadingSpaces.length + suggestion.length, 0); // 将光标移动到新句子末尾
+    }
+  } else {
+    appendText(suggestion);
   }
 
   // Do not empty for metaphor generation
-  if (domain != 'metaphor'){
+  if (domain != 'metaphor') {
     emptyDropdownMenu();
   }
-
 }
+
+
 
 function addToDropdownMenu(suggestion_with_probability
 ) {
