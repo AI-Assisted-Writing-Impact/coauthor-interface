@@ -346,11 +346,14 @@ function appendText(text) {
   let lastIndex = getText().length;
 
   // This action is automatically logged by text-change
-  quill.insertText(lastIndex, text);
+  quill.insertText(lastIndex, text, { color: '#4169E1' });
 
   // By default, selection change due to text insertion is "silent"
   // and not saved as part of logs
   setCursorAtTheEnd();
+  // 重置光标后的样式为默认颜色
+  quill.format('color', null);
+
 }
 function showAlert(message) {
   const alertBox = document.getElementById('alert-box');

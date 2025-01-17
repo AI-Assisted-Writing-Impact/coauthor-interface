@@ -59,7 +59,10 @@ function selectDropdownItem(suggestion, range) {
       // 替换光标所在句子的内容
       quill.deleteText(start, end - start); // 删除当前句子
       quill.insertText(start, leadingSpaces + suggestion, { color: '#4169E1' }); // 插入新的建议并保留空格
+
       quill.setSelection(start + leadingSpaces.length + suggestion.length, 0); // 将光标移动到新句子末尾
+      // 重置光标后的样式为默认颜色
+      quill.format('color', null);
     }
   } else {
     appendText(suggestion);
