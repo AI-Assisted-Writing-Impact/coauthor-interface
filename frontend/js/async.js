@@ -426,7 +426,6 @@ function queryGPT4ForSuggestions() {
       ];
       const end = Math.min(...endCandidates);
 
-    debugger
       // 特殊情况处理：光标在文本末尾或空格中
       if (start === 0 && end === trimmedText.length) {
         if (trimmedCursorIndex >= trimmedText.length) {
@@ -456,9 +455,6 @@ function queryGPT4ForSuggestions() {
         end: end !== -1 ? end + 1 : trimmedText.length, // 包含句号或问号
       };
     };
-
-
-
 
     // 使用 findSentenceBoundary 函数
     const { start, end } = findSentenceBoundary(text, cursorIndex);
@@ -511,7 +507,7 @@ You will see each prompt one at a time. Once you finish the first essay, you wil
             ...suggestion,
             range: range, // 将 range 添加到每个 suggestion 中
           }));
-          addSuggestionsToDropdown(updatedSuggestions);
+          addSuggestionsToDropdown(updatedSuggestions, doc);
           showDropdownMenu('api');
 
         } else {

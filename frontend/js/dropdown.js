@@ -29,7 +29,7 @@ function selectDropdownItem(suggestion, range) {
   logEvent(EventName.SUGGESTION_SELECT, EventSource.USER);
   hideDropdownMenu(EventSource.API);
 
-  if ($('.dropdown-item').length === 1) {
+  if ($('.dropdown-item').length === 2) {
     // 获取光标位置和当前文本内容
     const text = quill.getText();
 
@@ -78,26 +78,44 @@ function selectDropdownItem(suggestion, range) {
 
 function addToDropdownMenu(suggestion_with_probability
 ) {
+  const { content, plainText, range, isOriginal } = suggestion_with_probability;
   let index = suggestion_with_probability['index'];
   let original = suggestion_with_probability['original'];
   let trimmed = suggestion_with_probability['trimmed'];
   let probability = suggestion_with_probability['probability'];
   let source = suggestion_with_probability['source'];  // Could be empty
-  let range = suggestion_with_probability['range']
 
-  // Hide empty string suggestions
-  if (trimmed.length > 0) {
-    $('#frontend-overlay').append(function() {
-      return $('<div class="dropdown-item" data-source="' + source + '">' + trimmed + '</div>').click(function(){
-        currentHoverIndex = index;
-        currentIndex = index;
-        selectDropdownItem(original, range);
-      }).mouseover(function(){
-        currentHoverIndex = index;
-        logEvent(EventName.SUGGESTION_HOVER, EventSource.USER);
-      }).data('index', index).data('original', original).data('trimmed', trimmed).data('probability', probability).data('source', source);
-    });
+  if (plainText && plainText.length > 0) {
+      // 创建菜单项
+      const $menuItem = $('<div class="dropdown-item">')
+        .text(content)
+        .click(function () {
+          selectDropdownItem(plainText, range); // 替换时使用 plainText
+        })
+        .mouseover(function () {
+          logEvent(EventName.SUGGESTION_HOVER, EventSource.USER);
+        });
+
+      // 追加到下拉菜单
+      $('#frontend-overlay').append($menuItem);
   }
+  else {
+      // Hide empty string suggestions
+      if (trimmed && trimmed.length > 0) {
+        $('#frontend-overlay').append(function() {
+          return $('<div class="dropdown-item" data-source="' + source + '">' + trimmed + '</div>').click(function(){
+            currentHoverIndex = index;
+            currentIndex = index;
+            selectDropdownItem(original, range);
+          }).mouseover(function(){
+            currentHoverIndex = index;
+            logEvent(EventName.SUGGESTION_HOVER, EventSource.USER);
+          }).data('index', index).data('original', original).data('trimmed', trimmed).data('probability', probability).data('source', source);
+        });
+      }
+  }
+
+
 
 }
 
@@ -111,22 +129,45 @@ function reverse_sort_by_probability(a, b) {
   return 0;
 }
 
-function addSuggestionsToDropdown(suggestions_with_probabilities) {
+function addSuggestionsToDropdown(suggestions_with_probabilities, doc) {
   emptyDropdownMenu();
 
-  // Reverse sort suggestions based on probability if it is set in config
-  if (sortSuggestions == true){
-    suggestions_with_probabilities.sort(reverse_sort_by_probability);
+  // 如果传入了 doc，则处理原始句子和第一条建议
+  if (doc && suggestions_with_probabilities && suggestions_with_probabilities.length > 0) {
+    // 显示原始句子
+    addToDropdownMenu({
+      content: `Origin: ${doc}`, // 显示的内容带前缀
+      plainText: doc, // 替换时的实际内容
+      isOriginal: true,
+      range: suggestions_with_probabilities[0]?.range || null,
+    });
+
+    // 显示第一条建议
+    const firstSuggestion = suggestions_with_probabilities[0];
+    addToDropdownMenu({
+      content: `Suggestion: ${firstSuggestion.trimmed}`, // 显示的内容带前缀
+      plainText: firstSuggestion.trimmed, // 替换时的实际内容
+      probability: firstSuggestion.probability,
+      range: firstSuggestion.range,
+      isOriginal: false,
+    });
+  } else {
+    // 如果没有传入 doc，则按原始逻辑处理
+    if (sortSuggestions === true) {
+      suggestions_with_probabilities.sort(reverse_sort_by_probability);
+    }
+
+    for (let i = 0; i < suggestions_with_probabilities.length; i++) {
+        addToDropdownMenu(suggestions_with_probabilities[i]);
+      }
   }
 
-  for (let i = 0; i < suggestions_with_probabilities.length; i++) {
-    addToDropdownMenu(suggestions_with_probabilities[i]);
-  }
-
+  // 更新下拉菜单项的全局状态
   items = $('.dropdown-item');
   numItems = items.length;
   currentIndex = 0;
 }
+
 
 function showDropdownMenu(source, is_reopen=false) {
   // Check if there are entries in the dropdown menu
