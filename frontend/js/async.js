@@ -398,74 +398,33 @@ You will see each prompt one at a time. Once you finish the first essay, you wil
 }
 
 function queryGPT4ForSuggestions() {
-//  const doc = getText();
- const range = quill.getSelection(); // 获取光标位置
-    if (!range) {
-    alert("Please place the cursor in the sentence to check the grammar.");
+  const range = quill.getSelection(); // 获取选中范围或光标位置
+  if (!range) {
+    alert("Please place the cursor in the sentence or select text to check the grammar.");
     return;
-    }
+  }
 
-    const text = quill.getText(); // 获取编辑器的全文
-    const cursorIndex = range.index; // 光标位置
-    const findSentenceBoundary = (text, cursorIndex) => {
-      // 去掉首尾的空格以提高准确性
-      const trimmedText = text.trim();
-      const trimmedCursorIndex = cursorIndex - (text.length - trimmedText.length);
+  const text = quill.getText(); // 获取编辑器的全文
+  let doc = ""; // 用于存储最终提取的文本
 
-      // 找到最近的句子起点标点符号（句号或问号）
-      const lastPeriod = trimmedText.lastIndexOf('.', trimmedCursorIndex - 1);
-      const lastQuestionMark = trimmedText.lastIndexOf('?', trimmedCursorIndex - 1);
-      const start = Math.max(lastPeriod, lastQuestionMark) + 1 || 0;
-
-      // 找到最近的句子终点标点符号
-      const nextPeriod = trimmedText.indexOf('.', trimmedCursorIndex);
-      const nextQuestionMark = trimmedText.indexOf('?', trimmedCursorIndex);
-      const endCandidates = [
-        nextPeriod === -1 ? trimmedText.length : nextPeriod,
-        nextQuestionMark === -1 ? trimmedText.length : nextQuestionMark,
-      ];
-      const end = Math.min(...endCandidates);
-
-      // 特殊情况处理：光标在文本末尾或空格中
-      if (start === 0 && end === trimmedText.length) {
-        if (trimmedCursorIndex >= trimmedText.length) {
-          // 光标位于文本的最后
-          const previousSentenceEnd = Math.max(lastPeriod, lastQuestionMark);
-          const previousSentenceStart = Math.max(
-            trimmedText.lastIndexOf('.', previousSentenceEnd - 1),
-            trimmedText.lastIndexOf('?', previousSentenceEnd - 1)
-          ) + 1 || 0;
-
-          return {
-            start: previousSentenceStart,
-            end: previousSentenceEnd + 1,
-          };
-        }
-
-        // 如果没有有效的标点符号，且光标在空格中，则将整个文本视为一个句子
-        return {
-          start: 0,
-          end: trimmedText.length,
-        };
-      }
-
-      // 返回有效句子的边界
-      return {
-        start,
-        end: end !== -1 ? end + 1 : trimmedText.length, // 包含句号或问号
-      };
-    };
-
-    // 使用 findSentenceBoundary 函数
+  if (range.length > 0) {
+    // 用户选中了一段范围，提取范围内完整的句子
+    doc = findSentencesInRange(text, range);
+    console.log("Selected range detected. Extracted text:", doc);
+  } else {
+    // 用户没有选中范围，使用光标所在句子的提取逻辑
+    const cursorIndex = range.index;
     const { start, end } = findSentenceBoundary(text, cursorIndex);
-    const doc = text.slice(start, end).trim(); // 提取当前句子
+    doc = text.slice(start, end).trim();
+    console.log("Cursor detected. Extracted sentence:", doc);
+  }
 
-    if (!doc) {
-        alert("Sentence not found, place the cursor in the sentence.");
-        return;
-    }
-  const exampleText = exampleActualText;
-//  // 定义 instructions 和 prompt
+  // 检查提取的文本是否有效
+  if (!doc) {
+    alert("No sentence or text found for processing.");
+    return;
+  }
+
   const instructions = `In this task, you will write two essays in response to two different prompts. Please follow these guidelines:
 Write naturally and spontaneously, and avoid overthinking or making the writing overly formal.
 Each essay should be at least 500 words.
@@ -475,15 +434,16 @@ You will see each prompt one at a time. Once you finish the first essay, you wil
 
   const prompt = `Everyone’s on social media these days, but does it actually help people stay connected, or does it just make us feel more alone? What’s your take on it? Have you noticed a difference in your own friendships?`;
 
-//  // 创建 data 对象
-  const data = getDataForQuery(doc, exampleText);
+  // 创建 data 对象
+  const data = getDataForQuery(doc, text);
   data.instructions = instructions; // 添加 instructions
   data.prompt = prompt; // 添加 prompt
-  data.type = 'grammar'
+  data.type = 'grammar';
 
-   $.ajax({
+  // 发送 AJAX 请求
+  $.ajax({
     url: serverURL + '/api/query',
-    beforeSend: function() {
+    beforeSend: function () {
       hideDropdownMenu(EventSource.API);
       setCursorAtTheEnd();
       showLoadingSignal('Getting suggestions...');
@@ -493,43 +453,80 @@ You will see each prompt one at a time. Once you finish the first essay, you wil
     data: JSON.stringify(data),
     crossDomain: true,
     contentType: 'application/json; charset=utf-8',
-    success: function(data) {
+    success: function (data) {
       hideLoadingSignal();
       if (data.status == SUCCESS) {
-        if (data.original_suggestions.length > 0) {
-          originalSuggestions = data.original_suggestions;
-        } else {
-          originalSuggestions = [];
-        }
-
         if (data.suggestions_with_probabilities.length > 0) {
-          const updatedSuggestions = data.suggestions_with_probabilities.map(suggestion => ({
+          const updatedSuggestions = data.suggestions_with_probabilities.map((suggestion) => ({
             ...suggestion,
             range: range, // 将 range 添加到每个 suggestion 中
           }));
           addSuggestionsToDropdown(updatedSuggestions, doc);
           showDropdownMenu('api');
-
         } else {
           let msg = 'Please try again!\n\n'
-                    + 'Why is this happening? The system\n'
-                    + '- could not think of suggestions (' + data.counts.empty_cnt + ')\n'
-                    + '- generated same suggestions as before (' + data.counts.duplicate_cnt + ')\n'
-                    + '- generated suggestions that contained banned words (' + data.counts.bad_cnt + ')\n';
+            + 'Why is this happening? The system\n'
+            + '- could not think of suggestions (' + data.counts.empty_cnt + ')\n'
+            + '- generated same suggestions as before (' + data.counts.duplicate_cnt + ')\n'
+            + '- generated suggestions that contained banned words (' + data.counts.bad_cnt + ')\n';
           console.log(msg);
 
-          logEvent(EventName.SUGGESTION_FAIL, EventSource.API, textDelta=msg);
+          logEvent(EventName.SUGGESTION_FAIL, EventSource.API, textDelta = msg);
           alert("The system could not generate suggestions. Please try again.");
         }
-
       } else {
         alert(data.message);
       }
     },
-    error: function() {
+    error: function () {
       hideLoadingSignal();
       alert("Could not get suggestions. Press tab key to try again! If the problem persists, please send a screenshot of this message to " + contactEmail + ". Our sincere apologies for the inconvenience!");
-    }
+    },
   });
+}
 
+// 提取选中范围的完整句子
+function findSentencesInRange(text, range) {
+  const start = range.index; // 选中范围起始位置
+  const end = range.index + range.length; // 选中范围结束位置
+
+  // 向前查找最近的句号或问号
+  let sentenceStart = Math.max(
+    text.lastIndexOf('.', start - 1),
+    text.lastIndexOf('?', start - 1)
+  ) + 1;
+
+  // 向后查找最近的句号或问号
+  let sentenceEnd = Math.min(
+    text.indexOf('.', end) === -1 ? text.length : text.indexOf('.', end),
+    text.indexOf('?', end) === -1 ? text.length : text.indexOf('?', end)
+  ) + 1;
+
+  // 修正范围，确保包括空格和完整句子
+  sentenceStart = Math.max(sentenceStart, 0);
+  sentenceEnd = Math.min(sentenceEnd, text.length);
+
+  const extractedText = text.slice(sentenceStart, sentenceEnd).trim();
+  console.log("Extracted range text:", extractedText);
+  return extractedText;
+}
+
+// 提取光标所在句子的边界
+function findSentenceBoundary(text, cursorIndex) {
+  const lastPeriod = text.lastIndexOf('.', cursorIndex - 1);
+  const lastQuestionMark = text.lastIndexOf('?', cursorIndex - 1);
+  const start = Math.max(lastPeriod, lastQuestionMark) + 1 || 0;
+
+  const nextPeriod = text.indexOf('.', cursorIndex);
+  const nextQuestionMark = text.indexOf('?', cursorIndex);
+  const endCandidates = [
+    nextPeriod === -1 ? text.length : nextPeriod,
+    nextQuestionMark === -1 ? text.length : nextQuestionMark,
+  ];
+  const end = Math.min(...endCandidates);
+
+  return {
+    start,
+    end: end !== -1 ? end + 1 : text.length,
+  };
 }

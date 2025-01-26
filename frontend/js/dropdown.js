@@ -24,54 +24,94 @@ function hideDropdownMenu(source) {
   }
 }
 
-function selectDropdownItem(suggestion, range) {
+function selectDropdownItem(suggestion, range, type) {
   // Close dropdown menu after selecting new suggestion
   logEvent(EventName.SUGGESTION_SELECT, EventSource.USER);
   hideDropdownMenu(EventSource.API);
-
-  if ($('.dropdown-item').length === 2) {
-    // 获取光标位置和当前文本内容
+  if (type === 'grammar') {
     const text = quill.getText();
 
-    if (range) {
-      const cursorIndex = range.index;
+      if (range && range.length > 0) {
+        // 如果有选中范围，直接替换选中范围内的内容
+        const rangeStart = range.index; // 选中范围的起始位置
+        const rangeEnd = range.index + range.length; // 选中范围的结束位置
 
-      // 找到当前句子的起始位置，支持句号和问号
-      let start = Math.max(
-        text.lastIndexOf('.', cursorIndex - 1),
-        text.lastIndexOf('?', cursorIndex - 1)
-      ) + 1;
+        // 获取选中范围内的完整句子
+        const leadingSpaces = findSentencesInRange(text, range);
 
-      // 保留句子起点之前的空格
-      while (start > 0 && text[start - 1] === ' ') {
-        start--;
+        quill.deleteText(rangeStart, rangeStart + leadingSpaces.length); // 删除选中范围的内容
+        quill.insertText(rangeStart, suggestion, { color: '#4169E1' }); // 插入建议文本并保留前导空格
+        quill.setSelection(rangeStart + suggestion.length, 0); // 将光标移动到新句子末尾
+
+      } else {
+        // 如果没有选中范围，则替换光标所在的句子
+        const cursorIndex = range.index;
+
+        // 找到当前句子的起始位置
+        let start = Math.max(
+          text.lastIndexOf('.', cursorIndex - 1),
+          text.lastIndexOf('?', cursorIndex - 1)
+        ) + 1;
+
+        // 保留句子起点之前的空格
+        while (start > 0 && text[start - 1] === ' ') {
+          start--;
+        }
+
+        // 找到当前句子的结束位置
+        const end = Math.min(
+          text.indexOf('.', cursorIndex) === -1 ? text.length : text.indexOf('.', cursorIndex),
+          text.indexOf('?', cursorIndex) === -1 ? text.length : text.indexOf('?', cursorIndex)
+        ) + 1;
+
+        // 获取当前句子前面的空格
+        const leadingSpaces = text.slice(start, cursorIndex).match(/^\s*/)[0];
+
+        // 替换光标所在句子的内容
+        quill.deleteText(start, end - start); // 删除当前句子
+        quill.insertText(start, leadingSpaces + suggestion, { color: '#4169E1' }); // 插入新的建议并保留空格
+        quill.setSelection(start + leadingSpaces.length + suggestion.length, 0); // 将光标移动到新句子末尾
       }
 
-      // 找到当前句子的结束位置，支持句号和问号
-      const end = Math.min(
-        text.indexOf('.', cursorIndex) === -1 ? text.length : text.indexOf('.', cursorIndex),
-        text.indexOf('?', cursorIndex) === -1 ? text.length : text.indexOf('?', cursorIndex)
-      ) + 1;
-
-      // 获取当前句子前面的空格
-      const leadingSpaces = text.slice(start, cursorIndex).match(/^\s*/)[0];
-
-      // 替换光标所在句子的内容
-      quill.deleteText(start, end - start); // 删除当前句子
-      quill.insertText(start, leadingSpaces + suggestion, { color: '#4169E1' }); // 插入新的建议并保留空格
-
-      quill.setSelection(start + leadingSpaces.length + suggestion.length, 0); // 将光标移动到新句子末尾
       // 重置光标后的样式为默认颜色
       quill.format('color', null);
-    }
-  } else {
-    appendText(suggestion);
+  }
+  else {
+    appendText(' ' + suggestion);
   }
 
+
+
+
   // Do not empty for metaphor generation
-  if (domain != 'metaphor') {
+  if (domain !== 'metaphor') {
     emptyDropdownMenu();
   }
+}
+// 提取选中范围的完整句子
+function findSentencesInRange(text, range) {
+  const start = range.index; // 选中范围起始位置
+  const end = range.index + range.length; // 选中范围结束位置
+
+  // 向前查找最近的句号或问号
+  let sentenceStart = Math.max(
+    text.lastIndexOf('.', start - 1),
+    text.lastIndexOf('?', start - 1)
+  ) + 1;
+
+  // 向后查找最近的句号或问号
+  let sentenceEnd = Math.min(
+    text.indexOf('.', end) === -1 ? text.length : text.indexOf('.', end),
+    text.indexOf('?', end) === -1 ? text.length : text.indexOf('?', end)
+  ) + 1;
+
+  // 修正范围，确保包括空格和完整句子
+  sentenceStart = Math.max(sentenceStart, 0);
+  sentenceEnd = Math.min(sentenceEnd, text.length);
+
+  const extractedText = text.slice(sentenceStart, sentenceEnd).trim();
+  console.log("Extracted range text:", extractedText);
+  return extractedText;
 }
 
 
@@ -90,7 +130,7 @@ function addToDropdownMenu(suggestion_with_probability
       const $menuItem = $('<div class="dropdown-item">')
         .text(content)
         .click(function () {
-          selectDropdownItem(plainText, range); // 替换时使用 plainText
+          selectDropdownItem(plainText, range, 'grammar'); // 替换时使用 plainText
         })
         .mouseover(function () {
           logEvent(EventName.SUGGESTION_HOVER, EventSource.USER);
