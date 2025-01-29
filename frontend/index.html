@@ -42,8 +42,8 @@
   </head>
 
   <body>
-    <div id="header" data-toggle="tooltip" data-placement="bottom" title="Press tab to get suggestions from AI!">
-      <h1 class="text-light">CoAuthor
+    <div id="header" data-toggle="tooltip" data-placement="bottom">
+      <h1 class="text-light">UC CoAuthor
         <i id='robot' class="fas fa-pen-nib"></i>
         <i id='setting-btn' class="fa fa-cog" aria-hidden="true"></i>
       </h1>
@@ -101,14 +101,8 @@
     </div>
     <div id="instructions-section" class="container mt-4">
       <h3>Instructions</h3>
-      <p>In this task, you will write two essays in response to two different prompts. Please follow these guidelines:</p>
-      <ul>
-        <li>Write naturally and spontaneously, and avoid overthinking or making the writing overly formal.</li>
-        <li>Each essay should be at least 500 words.</li>
-        <li>Do not use any editing tools, grammar checkers, or other external resources to assist your writing.</li>
-        <li>Spend no more than 40 minutes per essay.</li>
-      </ul>
-      <p>You will see each prompt one at a time. Once you finish the first essay, you will proceed to the second prompt.</p>
+      <p id="instructions-content"></p>
+
     </div>
 
     <div id="prompt-section" class="container mt-4">
@@ -130,7 +124,9 @@
           <span class="key" style="margin-right: 5px;">Enter</span> Select suggestion</br>
         </span>
 
-        <span id="grammar"><span class="key" style="margin-right: 5px;">F1</span> Grammar and style revision</br></span>
+        <span id="grammar"><span class="key" style="margin-right: 5px;">F1</span> Windows: F1 for grammar and style suggestions</br>
+          <span class="key" style="margin-right: 5px;">fn + F1</span> Mac: fn + F1 for grammar and style suggestions</br>
+        </span>
 
       </div>
     </div>

@@ -7,6 +7,82 @@ $(function() {
 
   const type = getUrlParameter('type'); // 获取 URL 中的 type 参数
 
+  // 定义不同类型的 instructions
+  const instructionsMap = {
+    a: `
+      <p>In this task, you will write one essay with an AI-powered writing assistant which can provide you with grammar and style suggestions.
+      Please write naturally and spontaneously, and avoid overthinking or making the writing overly formal.
+      Do not use any editing tools, grammar checkers, or other external resources to assist your writing.</p>
+      <p>Please follow these guidelines:</p>
+      <ul>
+        <li>When you need suggestions for grammar and style while you write, press <b>F1</b> if you are using Windows or <b>fn + F1</b> for a Mac. You can accept, revise, or reject the suggestions.</li>
+        <li>Please use this grammar and style suggestions function at least <b>5 times</b>.</li>
+        <li>Each essay should be at least <b>500 words</b>, ensuring it has a clear ending.</li>
+        <li>Spend no more than <b>40 minutes</b>.</li>
+        <li>Once you’re done, click the <b>Save</b> button, which will give you a verification code.</li>
+        <li>Copy and paste your essay and verification code below.</li>
+      </ul>
+    `,
+    b: `
+      <p>In this task, you will write one essay with an AI-powered writing assistant that can help you continue your sentences.
+      Please write naturally and spontaneously, and avoid overthinking or making the writing overly formal.
+      Do not use any editing tools, grammar checkers, or other external resources to assist your writing.</p>
+      <p>Please follow these guidelines:</p>
+      <ul>
+        <li>If you want the AI to complete an unfinished sentence or generate a new sentence, press the <b>Tab</b> key. You can accept, revise, or reject the completion.</li>
+        <li>Please use the sentence continuation/generation function at least <b>5 times</b>.</li>
+        <li>Each essay should be at least <b>500 words</b>, ensuring it has a clear ending.</li>
+        <li>Spend no more than <b>40 minutes</b>.</li>
+        <li>Once you’re done, click the <b>Save</b> button, which will give you a verification code.</li>
+        <li>Copy and paste your essay and verification code below.</li>
+      </ul>
+    `,
+    c: `
+      <p>In this task, you will write an essay with an AI-powered writing assistant that will generate the second half of your essay.
+      Please write naturally and spontaneously, and avoid overthinking or making the writing overly formal.
+      Do not use any editing tools, grammar checkers, or other external resources to assist your writing.</p>
+      <p>Please follow these guidelines:</p>
+      <ul>
+        <li>Write the first <b>250 words</b> of your essay on your own.</li>
+        <li>Once you write about 250 words, press the <b>Tab</b> key to generate the second half of your essay. You can accept, revise, or reject the AI-generated text.</li>
+        <li>Spend no more than <b>40 minutes</b>.</li>
+        <li>Once you’re done, click the <b>Save</b> button, which will give you a verification code.</li>
+        <li>Copy and paste your full essay and verification code below.</li>
+      </ul>
+    `,
+    d: `
+      <p>In this task, you will write an essay with an AI-powered writing assistant that will generate the first 250 words of your essay.
+      Please write naturally and spontaneously, and avoid overthinking or making the writing overly formal.
+      Do not use any editing tools, grammar checkers, or other external resources to assist your writing.</p>
+      <p>Please follow these guidelines:</p>
+      <ul>
+        <li>Press the <b>Tab</b> key at the beginning to generate the first <b>250 words</b> of your essay. You can accept, revise, or reject the AI-generated text.</li>
+        <li>Continue writing from where the AI left off until your essay reaches at least <b>500 words</b>, ensuring it has a clear ending.</li>
+        <li>Spend no more than <b>40 minutes</b>.</li>
+        <li>Once you’re done, click the <b>Save</b> button, which will give you a verification code.</li>
+        <li>Copy and paste your full essay and verification code below.</li>
+      </ul>
+    `,
+    e: `
+      <p>In this task, you will write an essay.
+      Please write naturally and spontaneously, and avoid overthinking or making the writing overly formal.
+      Do not use any editing tools, grammar checkers, or other external resources to assist your writing.</p>
+      <p>Please follow these guidelines:</p>
+      <ul>
+        <li>Your essay should be at least <b>500 words</b> and have a clear ending.</li>
+        <li>You should spend no more than <b>40 minutes</b> on this task.</li>
+        <li>Once you’re done, click the <b>Save</b> button, which will give you a verification code.</li>
+        <li>Copy and paste your full essay and verification code below.</li>
+      </ul>
+    `
+  };
+  // 设置 Instructions
+  if (instructionsMap[type]) {
+    $("#instructions-content").html(instructionsMap[type]);
+  } else {
+    $("#instructions-content").html("<p>Invalid type. Please check the URL.</p>");
+  }
+
   // 根据 type 参数显示或隐藏特定的功能
   if (type === 'a') {
     $('#suggestion').hide(); // 隐藏 suggestion

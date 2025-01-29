@@ -216,12 +216,27 @@ function setupEditorMachineOnly() {
   quill.focus();
 }
 
+function getUrlParameter(name) {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(name);
+}
+
 function setupEditor() {
   let bindings = {
     tab: {
       key: 9,
       handler: function() {
         logEvent(EventName.SUGGESTION_GET, EventSource.USER);
+        const type = getUrlParameter('type'); // 获取 URL 中的 type 参数
+        const text = quill.getText().trim(); // 获取编辑器的文本
+        const wordCount = text.length > 0 ? text.split(/\s+/).filter(word => word.length > 0).length : 0;
+
+        // 仅在 type 为 'c' 时检查字数
+        if (type === 'c' && wordCount < 250) {
+            alert("You must enter at least 250 words before requesting AI suggestions.");
+            return;
+        }
+
         queryGPT3();
       }
     },
@@ -365,4 +380,57 @@ function showAlert(message) {
   } else {
     console.error("Alert box or message element not found");
   }
+}
+var hasUserStartedWriting = false; // 记录用户是否已开始输入
+
+function trackTextChanges() {
+  quill.on('text-change', function (delta, oldDelta, source) {
+    if (source == 'silent') {
+      return;
+    } else {
+      // 获取 URL 参数中的 type
+      const type = getUrlParameter('type');
+
+      // 如果 type 是 'd'，监听用户首次输入
+      if (type === 'd' && !hasUserStartedWriting) {
+        const text = quill.getText().trim(); // 获取编辑器文本
+        if (text.length === 1) {
+           alert("Press the Tab key to generate the first 250 words of your essay.");
+           return
+        } else {
+          hasUserStartedWriting = true; // 标记用户已经开始输入
+        }
+      }
+
+      // 其他日志处理
+      eventName = null;
+      eventSource = sourceToEventSource(source);
+      ops = new Array();
+      for (let i = 0; i < delta.ops.length; i++) {
+        ops = ops.concat(Object.keys(delta.ops[i]));
+      }
+      if (ops.includes('insert')) {
+        eventName = EventName.TEXT_INSERT;
+      } else if (ops.includes('delete')) {
+        eventName = EventName.TEXT_DELETE;
+      } else {
+        eventName = EventName.SKIP;
+        console.log('Ignore format change');
+      }
+      logEvent(eventName, eventSource, textDelta = delta);
+
+      if (isCounterEnabled == true) {
+        updateCounter();
+      }
+
+      if (domain == 'template') {
+        let currentTime = new Date();
+        let elapsedTime = (currentTime - checkFormatLockTime) / 1000;
+        if (elapsedTime > 1) {
+          checkFormatLockTime = currentTime;
+          formatNonTerminals();
+        }
+      }
+    }
+  });
 }

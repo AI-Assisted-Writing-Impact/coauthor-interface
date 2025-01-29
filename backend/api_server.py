@@ -238,7 +238,7 @@ def query():
     else:
         results = parse_prompt(doc, max_tokens, context_window_size)
         prompt = results['effective_prompt']
-        if query_type == 'c' or query_type == 'd':
+        if query_type == 'c':
             messages = [
                 {
                     "role": "system",
@@ -252,6 +252,23 @@ def query():
                 }
             ]
             max_tokens = 500
+        elif query_type == 'd':
+                messages = [
+                    {
+                        "role": "system",
+                        "content": f"You are a writing assistant. Write approximately 250 words of an essay on the given topic. "
+                                   f"Ensure the output consists of about 250 words, not 250 characters. "
+                                   f"Keep it coherent, relevant, and do not stop prematurely. Follow these instructions:\n\n"
+                                   f"{instructions}\n\n"
+                                   f"Prompt:\n{prompt_text}\n\n"
+                    },
+                    {
+                        "role": "user",
+                        "content": f"Please generate the first 250 words of an essay based on this topic:\n\n{prompt}"
+                    }
+                ]
+                max_tokens = 500  # 250 词大约需要 350 tokens
+
         else:
             messages = [
                 {
