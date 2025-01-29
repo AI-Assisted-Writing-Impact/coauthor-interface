@@ -176,7 +176,7 @@ function addSuggestionsToDropdown(suggestions_with_probabilities, doc) {
   if (doc && suggestions_with_probabilities && suggestions_with_probabilities.length > 0) {
     // 显示原始句子
     addToDropdownMenu({
-      content: `Origin: ${doc}`, // 显示的内容带前缀
+      content: `Original: ${doc}`, // 显示的内容带前缀
       plainText: doc, // 替换时的实际内容
       isOriginal: true,
       range: suggestions_with_probabilities[0]?.range || null,
@@ -185,7 +185,7 @@ function addSuggestionsToDropdown(suggestions_with_probabilities, doc) {
     // 显示第一条建议
     const firstSuggestion = suggestions_with_probabilities[0];
     addToDropdownMenu({
-      content: `Suggestion: ${firstSuggestion.trimmed}`, // 显示的内容带前缀
+      content: `Revised: ${firstSuggestion.trimmed}`, // 显示的内容带前缀
       plainText: firstSuggestion.trimmed, // 替换时的实际内容
       probability: firstSuggestion.probability,
       range: firstSuggestion.range,
