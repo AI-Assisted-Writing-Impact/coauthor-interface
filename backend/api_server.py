@@ -242,7 +242,7 @@ def query():
             messages = [
                 {
                     "role": "system",
-                    "content": f"You are a writing assistant. Write approximately 250 words to continue the given text. Ensure the continuation is coherent, relevant, and does not stop prematurely. Follow these instructions:\n\n"
+                    "content": f"You are a writing assistant. Write approximately 500 words to continue the given text. Ensure the continuation is coherent, relevant, and does not stop prematurely. Follow these instructions:\n\n"
                                f"{instructions}\n\n"
                                f"Prompt:\n{prompt_text}\n\n"
                 },
@@ -256,7 +256,7 @@ def query():
                 messages = [
                     {
                         "role": "system",
-                        "content": f"You are a writing assistant. Write approximately 250 words of an essay on the given topic. "
+                        "content": f"You are a writing assistant. Write approximately 500 words of an essay on the given topic. "
                                    f"Ensure the output consists of about 250 words, not 250 characters. "
                                    f"Keep it coherent, relevant, and do not stop prematurely. Follow these instructions:\n\n"
                                    f"{instructions}\n\n"
@@ -268,6 +268,21 @@ def query():
                     }
                 ]
                 max_tokens = 500  # 250 词大约需要 350 tokens
+
+        elif query_type == 'f':
+            messages = [
+                {
+                    "role": "system",
+                    "content": f"You are a writing assistant. Write approximately 5 words to continue the given text. Follow these instructions:\n\n"
+                               f"{instructions}\n\n"
+                               f"Prompt:\n{prompt_text}\n\n"
+                },
+                {
+                    "role": "user",
+                    "content": f"Here is the text to continue:\n\n{prompt}"
+                }
+            ]
+            max_tokens = 5
 
         else:
             messages = [
