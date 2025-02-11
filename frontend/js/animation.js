@@ -27,6 +27,7 @@ function showLoadingSignal(message) {
 
 function hideLoadingSignal() {
   $('#robot').removeClass('spin');
+  // hide loading
   $('#loading-message').hide();
 
 }
