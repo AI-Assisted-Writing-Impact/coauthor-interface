@@ -273,7 +273,7 @@ def query():
             messages = [
                 {
                     "role": "system",
-                    "content": f"You are a writing assistant. Write approximately 5 words to continue the given text. Follow these instructions:\n\n"
+                    "content": f"You are a writing assistant. Write approximately 3 words to continue the given text. Follow these instructions:\n\n"
                                f"{instructions}\n\n"
                                f"Prompt:\n{prompt_text}\n\n"
                 },

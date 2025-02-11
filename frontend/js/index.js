@@ -87,7 +87,7 @@ $(function() {
   if (type === 'a') {
     $('#suggestion').hide(); // 隐藏 suggestion
     $('#grammar').show();    // 显示 grammar
-  } else if (type === 'b' || type === 'c' || type === 'd') {
+  } else if (type === 'b' || type === 'c' || type === 'd'|| type === 'f') {
     $('#suggestion').show(); // 显示 suggestion
     $('#grammar').hide();    // 隐藏 grammar
   } else if (type === 'e') {
