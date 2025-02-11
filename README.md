@@ -2,21 +2,9 @@
 
 <img src="./coauthor.png" width="350px"/>
 
-**An Open-Source Interface for Human-AI Collaborative Writing**
+**An Open-Source Interface for Human-AI Collaboration**
 
 </div>
-
-## Overview
-
-This repository contains the code for the **interface** of [CoAuthor](https://coauthor.stanford.edu). The interface comes in two parts: (1) the frontend presented to the users for writing with AI and to replay previous writing sessions, and (2) the backend that serves requests from the frontend and queries models to generate suggestions.
-
-For downloading the CoAuthor dataset and replaying its writing sessions, please visit the [website](https://coauthor.stanford.edu) instead.
-
-- Paper: 
-[CoAuthor: Designing a Human-AI Collaborative Writing Dataset for Exploring Language Model Capabilities](https://arxiv.org/abs/2201.06796) ([Mina Lee](https://minalee.info/), [Percy Liang](https://cs.stanford.edu/~pliang/), and [Qian Yang](https://qianyang.co/), CHI 2022)
-- Main contributors of this repository: [Mina Lee](https://minalee.info/) and [Vishakh Padmakumar](https://vishakhpk.github.io/).
-
-If you have any questions, please feel free to reach out to [Mina Lee](https://minalee.info/) at `mnlee@uchicago.edu`.
 
 ---
 
