@@ -17,6 +17,7 @@ $('i').hover(
 
 function showLoadingSignal(message) {
   $('#robot').addClass('spin');
+  // show loading
   if (!$('#loading-message').length) {
     $('body').append('<div id="loading-message" class="loading-overlay">Working on it...</div>');
   }
