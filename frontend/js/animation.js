@@ -17,9 +17,15 @@ $('i').hover(
 
 function showLoadingSignal(message) {
   $('#robot').addClass('spin');
+  if (!$('#loading-message').length) {
+    $('body').append('<div id="loading-message" class="loading-overlay">Working on it...</div>');
+  }
+  $('#loading-message').show();
   // Ignore message for default loading signal
 }
 
 function hideLoadingSignal() {
   $('#robot').removeClass('spin');
+  $('#loading-message').hide();
+
 }
