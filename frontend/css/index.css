@@ -77,10 +77,19 @@ html, body {
 
 #frontend {
   position: relative;
-  width: 60%;
-  height: calc(100vh - 100px - 60px - 100px);  /* header - footer - top/bottom margin */
-  margin: 50px auto;
+  width: 66%;
+  /*height: calc(100vh - 100px - 60px - 100px);  /* header - footer - top/bottom margin */
+  height: 1000px;
+  margin: 30px auto;
 }
+
+#frontend_test {
+  position: relative;
+  width: 66%;
+  height: 200px;  /* header - footer - top/bottom margin */
+  margin: 30px auto;
+}
+
 
 #frontend-overlay {
   position: absolute;
@@ -110,7 +119,7 @@ html, body {
 #editor-container {
   font-family: 'Source Sans Pro', sans-serif;
   font-size: 18px;
-  height: auto;
+  height: 98%;
 }
 
 #footer {
@@ -223,6 +232,14 @@ ol, ul {
 }
 
 #instructions-section, #prompt-section {
+  border: 1px solid #ddd;
+  padding: 20px;
+  margin-bottom: 20px;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+}
+
+.test-section{
   border: 1px solid #ddd;
   padding: 20px;
   margin-bottom: 20px;

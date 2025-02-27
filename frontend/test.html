@@ -30,14 +30,14 @@
     <!-- Data -->
     <script>const domain = 'story';</script>
     <script src="./js/config.js" defer></script>
-    <script src="./js/helper.js" defer></script> 
+    <script src="./js/helper.js" defer></script>
     <script src="./js/script.js" defer></script>
     <script src="./js/logging.js" defer></script>
-    <script src="./js/animation.js" defer></script> 
+    <script src="./js/animation.js" defer></script>
     <script src="./js/editor.js" defer></script>
     <script src="./js/dropdown.js" defer></script>
     <script src="./js/async.js" defer></script>
-    <script src="./js/index.js" defer></script>
+    <script src="./js/test.js" defer></script>
 
   </head>
 
@@ -99,17 +99,20 @@
         </div>
       </form>
     </div>
-    <div id="instructions-section" class="container mt-4">
-      <h3>Instructions</h3>
-      <p id="instructions-content"></p>
 
+    <div class="container mt-4 test-section">
+        <p>Please follow the steps below to complete the test:</p>
+
+        <ol style="text-align: left; display: inline-block;">
+            <li>Write some text in the editor below.</li>
+            <li>Press <b>Tab</b> to request AI-generated suggestions.</li>
+            <li>Select a suggestion.</li>
+            <li>Once done, a success message will appear.</li>
+            <li>Click "Next Page" to continue.</li>
+        </ol>
     </div>
 
-    <div id="prompt-section" class="container mt-4">
-      <p id="prompt-text"></p>
-    </div>
-
-    <div id="frontend">
+    <div id="frontend_test">
       <div id="shortcuts">
       <div style="margin-bottom: 5px;">
         <b>Keyboard shortcuts</b>
@@ -130,14 +133,15 @@
       </div>
     </div>
       <div id="editor-view">
-        <div id="word-count">
-          Word Count: <span id="word-count-value">0</span>
-        </div>
         <div id="editor-container">
         </div>
       </div>
     </div>
+    <div class="container mt-4" style="text-align: center;padding: 20px; z-index: 1; position: relative">
+        <p id="status-message">✅ Test completed successfully! Click "Next Page" to proceed.</p>
 
+        <button id="next-page-btn" class="btn btn-primary">Next Page</button>
+    </div>
 
     <div id="frontend-overlay" class="dropdown-menu hidden">
     </div>
