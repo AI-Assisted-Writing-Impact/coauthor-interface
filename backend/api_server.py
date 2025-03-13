@@ -242,7 +242,7 @@ def query():
             messages = [
                 {
                     "role": "system",
-                    "content": f"You are a writing assistant. Write approximately 15 sentences to continue the given text. Ensure the continuation is coherent, relevant, and does not stop prematurely. Follow these instructions:\n\n"
+                    "content": f"You are a writing assistant. Write approximately 250 words to continue the given text. Ensure the continuation is coherent, relevant, and does not stop prematurely. Follow these instructions:\n\n"
                                f"{instructions}\n\n"
                                f"Prompt:\n{prompt_text}\n\n"
                 },
@@ -256,7 +256,7 @@ def query():
                 messages = [
                     {
                         "role": "system",
-                        "content": f"You are a writing assistant. Write approximately 15 sentences of an essay on the given topic. "
+                        "content": f"You are a writing assistant. Write approximately 250 words of an essay on the given topic. "
                                    f"Ensure the output consists of about 250 words, not 250 characters. "
                                    f"Keep it coherent, relevant, and do not stop prematurely. Follow these instructions:\n\n"
                                    f"{instructions}\n\n"
@@ -264,7 +264,7 @@ def query():
                     },
                     {
                         "role": "user",
-                        "content": f"Please generate the first 15 sentences of an essay based on this topic:\n\n{prompt}"
+                        "content": f"Please generate the first 250 words of an essay based on this topic:\n\n{prompt}"
                     }
                 ]
                 max_tokens = 500  # 250 词大约需要 350 tokens
