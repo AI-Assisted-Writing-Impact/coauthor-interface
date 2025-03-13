@@ -211,11 +211,11 @@ ol, ul {
   color: white;
 }
 
-/* Editor */
+/* Editor
 .ql-editor {
   height: calc(100vh - 100px - 50px - 100px - 100px);
 }
-
+*/
 .ql-editor, .ql-toolbar, .ql-container.ql-snow {
   border: none !important;
 }
