@@ -249,7 +249,9 @@ def query():
             messages = [
                 {
                     "role": "system",
-                    "content": f"You are a writing assistant. Write approximately 250 words to continue the given text. Ensure the continuation is coherent, relevant, and does not stop prematurely. Follow these instructions:\n\n"
+                    "content": f"You are a writing assistant. Write **exactly** 250 words to continue the given text. "
+                               f"Ensure the continuation is coherent, relevant, and does not stop prematurely. "
+                               f"Follow these instructions:\n\n"
                                f"{instructions}\n\n"
                                f"Prompt:\n{prompt_text}\n\n"
                 },
@@ -258,7 +260,8 @@ def query():
                     "content": f"Here is the text to continue:\n\n{prompt}"
                 }
             ]
-            max_tokens = 500
+            max_tokens = 350
+            stop = ["\n\n"]
         elif query_type == 'd':
                 messages = [
                     {
