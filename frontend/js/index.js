@@ -118,7 +118,6 @@ $(function() {
     $('#setting-btn').click(function(e) {
       $('#control').toggleClass('show');
     });
-    $('#finish-btn').prop('disabled', false);
     $('#finish-replay-btn').prop('disabled', false);
   }
 
@@ -206,8 +205,31 @@ $(function() {
   $('#shortcuts-open-btn').click(function(e) {
     openShortcuts();
   });
+  const finishBtn = document.getElementById("finish-btn");
+  finishBtn.disabled = true;
+    const storyText = document.getElementById("story-text");
+    const clearEnding = document.getElementById("clear-ending");
+    const aiCollaboration = document.getElementById("ai-collaboration");
+
+    function validateForm() {
+        if (storyText.value.trim() !== "" && clearEnding.checked && aiCollaboration.checked) {
+            finishBtn.disabled = false; // 启用按钮
+        } else {
+            finishBtn.disabled = true;  // 禁用按钮
+        }
+    }
+
+    // 监听输入变化
+    storyText.addEventListener("input", validateForm);
+    clearEnding.addEventListener("change", validateForm);
+    aiCollaboration.addEventListener("change", validateForm);
+
+    // **在页面加载时执行一次，确保初始状态**
+    validateForm();
   $('#finish-btn').click(function(e) {
-    endSession();
+    if (storyText.value.trim() !== "" && clearEnding.checked && aiCollaboration.checked) {
+        endSession();
+    }
   });
   $('#finish-replay-btn').click(function(e) {
     endSessionWithReplay();

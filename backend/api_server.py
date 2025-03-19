@@ -21,7 +21,7 @@ from helper import (
     print_verbose, print_current_sessions,
     get_uuid, retrieve_log_paths,
     append_session_to_file, get_context_window_size,
-    save_log_to_jsonl, compute_stats, get_last_text_from_log, get_config_for_log,
+    save_log_to_jsonl, save_story_to_json, compute_stats, get_last_text_from_log, get_config_for_log,
 )
 from parsing import (
     parse_prompt, parse_suggestion, parse_probability,
@@ -130,14 +130,21 @@ def end_session():
     content = request.json
     session_id = content['sessionId']
     log = content['logs']
+    story_text = content['storyText']
 
     path = os.path.join(proj_dir, session_id) + '.jsonl'
+    story_path = os.path.join(proj_dir, session_id + '_story.json')
 
     results = {}
     results['path'] = path
     try:
         save_log_to_jsonl(path, log)
+
+        # 额外存储 storyText 为 JSON 文件
+        save_story_to_json(story_path, story_text)
+
         results['status'] = SUCCESS
+        results['story_path'] = story_path
     except Exception as e:
         results['status'] = FAILURE
         results['message'] = str(e)

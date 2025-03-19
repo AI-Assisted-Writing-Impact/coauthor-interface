@@ -141,7 +141,7 @@
 
     </div>
 
-    <div class="container mt-4">
+    <div class="container mt-4" style="margin-bottom:20px">
       <form id="story-form">
         <!-- 文本框 -->
         <label for="story-text">Copy and paste your story - do not write here directly! (required)</label>
@@ -160,7 +160,8 @@
         </div>
 
         <!-- 提交按钮 -->
-        <button type="submit">Submit</button>
+        <button type="button" class="btn btn-light" disabled id="finish-btn" ><i class="fas fa-check"></i>Save</button>
+        <span id="verification-code" class="text-muted do-not-display"></span>
     </form>
     </div>
 
@@ -176,9 +177,9 @@
         &copy; Copyright 2022. All Rights Reserved.
       </small></span>
 
-      <button id="finish-btn" type="button" class="btn btn-light" disabled><i class="fas fa-check"></i>Save your work</button>
+<!--      <button id="finish-btn" type="button" class="btn btn-light" disabled><i class="fas fa-check"></i>Save your work</button>-->
       <!-- <button id="finish-replay-btn" type="button" class="btn btn-light" disabled><i class="fas fa-check"></i>Get a replay link</button> -->
-      <span id="verification-code" class="text-muted do-not-display"></span>
+<!--      <span id="verification-code" class="text-muted do-not-display"></span>-->
     </footer><!-- Footer -->
 
     <!-- Bootstrap -->

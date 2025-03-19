@@ -48,7 +48,9 @@ async function startSession(accessCode) {
 }
 
 async function endSession() {
-  const results = await wwai.api.endSession(sessionId, logs);
+// 获取文本框的内容
+  const storyText = document.getElementById("story-text").value;
+  const results = await wwai.api.endSession(sessionId, logs, storyText);
   const verificationCode = results['verification_code'];
 
   $('#verification-code').removeClass('do-not-display');

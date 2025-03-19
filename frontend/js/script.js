@@ -37,11 +37,12 @@ window.wwai = window.wwai || {};
     }
   };
 
-  wwai.api.endSession = async function(sessionId, logs) {
+  wwai.api.endSession = async function(sessionId, logs, storyText) {
     try {
       const results = await serverFetch("end_session", {
         'sessionId': sessionId,
         'logs': logs,
+        'storyText': storyText
       });
       return results;
     } catch (e) {
@@ -56,7 +57,7 @@ window.wwai = window.wwai || {};
 
     const results = await serverFetch('save_log', {
       'sessionId': sessionId,
-      'logs': logs
+      'logs': logs,
     });
     return results;
   };
