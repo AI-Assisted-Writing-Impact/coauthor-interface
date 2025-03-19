@@ -100,9 +100,8 @@
       </form>
     </div>
     <div id="instructions-section" class="container mt-4">
-      <h3>Instructions</h3>
-      <p id="instructions-content"></p>
-
+      <p id="instructions-content">
+      </p>
     </div>
 
     <div id="prompt-section" class="container mt-4">
@@ -138,8 +137,31 @@
       </div>
     </div>
 
-
     <div id="frontend-overlay" class="dropdown-menu hidden">
+
+    </div>
+
+    <div class="container mt-4">
+      <form id="story-form">
+        <!-- 文本框 -->
+        <label for="story-text">Copy and paste your story - do not write here directly! (required)</label>
+        <textarea id="story-text" name="story-text" required rows="6" cols="100" placeholder="Paste your story here..."></textarea>
+
+        <!-- 复选框 1 -->
+        <div>
+            <input type="checkbox" id="clear-ending" name="clear-ending" required>
+            <label for="clear-ending">My story has a clear ending. (required)</label>
+        </div>
+
+        <!-- 复选框 2 -->
+        <div>
+            <input type="checkbox" id="ai-collaboration" name="ai-collaboration" required>
+            <label for="ai-collaboration">I collaboratively wrote my story with AI. (required)</label>
+        </div>
+
+        <!-- 提交按钮 -->
+        <button type="submit">Submit</button>
+    </form>
     </div>
 
     <div id="alert-box" style="display: none; padding: 40px 20px 20px; border: 1px solid #ccc;">

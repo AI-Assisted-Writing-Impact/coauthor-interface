@@ -10,69 +10,73 @@ $(function() {
   // 定义不同类型的 instructions
   const instructionsMap = {
     a: `
-      <p>In this task, you will write one essay with an AI-powered writing assistant which can provide you with grammar and style suggestions.
-      Please write naturally and spontaneously, and avoid overthinking or making the writing overly formal.
-      Do not use any editing tools, grammar checkers, or other external resources to assist your writing.</p>
+      <p><b>Instructions: </b>In this task, you will write using an AI-powered writing assistant that provides grammar and style suggestions. Please write naturally and spontaneously. Do not use any external resources to assist your writing. </p>
       <p>Please follow these guidelines:</p>
       <ul>
-        <li>When you need suggestions for grammar and style while you write, press <b>F1</b> if you are using Windows or <b>fn + F1</b> for a Mac. You can accept, revise, or reject the suggestions.</li>
-        <li>Please use this grammar and style suggestions function at least <b>5 times</b>.</li>
-        <li>Each essay should be at least <b>500 words</b>, ensuring it has a clear ending.</li>
-        <li>Spend no more than <b>40 minutes</b>.</li>
+        <li>When you need suggestions for grammar and style while you write, press <b>F1</b>(Windows) or <b>fn + F1</b> (Mac). You can accept, revise, or reject the suggestions.</li>
+        <li>Use this grammar and style suggestions function <b>at least 5 times</b>.</li>
+        <li>Your essay should be <b>at least 500 words</b>, ensuring it has a clear ending.</li>
+        <li>Spend <b>at least 40 minutes</b>.</li>
         <li>Once you’re done, click the <b>Save</b> button, which will give you a verification code.</li>
         <li>Copy and paste your essay and verification code below.</li>
       </ul>
     `,
     b: `
-      <p>In this task, you will write one essay with an AI-powered writing assistant that can help you continue your sentences.
-      Please write naturally and spontaneously, and avoid overthinking or making the writing overly formal.
-      Do not use any editing tools, grammar checkers, or other external resources to assist your writing.</p>
+      <p><b>Instructions: </b>In this task, you will write using an AI-powered writing assistant that can help you continue your sentences. Please write naturally and spontaneously. Do not use any external resources to assist your writing. </p>
       <p>Please follow these guidelines:</p>
       <ul>
-        <li>If you want the AI to complete an unfinished sentence or generate a new sentence, press the <b>Tab</b> key. You can accept, revise, or reject the completion.</li>
-        <li>Please use the sentence continuation/generation function at least <b>5 times</b>.</li>
-        <li>Each essay should be at least <b>500 words</b>, ensuring it has a clear ending.</li>
-        <li>Spend no more than <b>40 minutes</b>.</li>
+        <li>If you want the AI to complete an unfinished sentence or generate a new sentence, press the <b>Tab</b> key. You can <b>accept</b>, <b>revise</b>, or <b>reject</b> the continuation.</li>
+        <li>Use the sentence continuation/generation function <b>at least 5 times</b>.</li>
+        <li>Your essay should be <b>at least 500 words</b>, ensuring it has a clear ending.</li>
+        <li>Spend <b>at least 40 minutes</b>.</li>
         <li>Once you’re done, click the <b>Save</b> button, which will give you a verification code.</li>
         <li>Copy and paste your essay and verification code below.</li>
       </ul>
     `,
     c: `
-      <p>In this task, you will write an essay with an AI-powered writing assistant that will generate the second half of your essay.
-      Please write naturally and spontaneously, and avoid overthinking or making the writing overly formal.
-      Do not use any editing tools, grammar checkers, or other external resources to assist your writing.</p>
+      <p><b>Instructions: </b>In this task, you will write a 500-word essay with an AI-powered writing assistant that will generate the second half of your essay. Please write naturally and spontaneously. Do not use any external resources to assist your writing.</p>
       <p>Please follow these guidelines:</p>
       <ul>
-        <li>Write the first <b>250 words</b> of your essay on your own.</li>
-        <li>Once you write about 250 words, press the <b>Tab</b> key to generate the second half of your essay. You can accept, revise, or reject the AI-generated text.</li>
-        <li>Spend no more than <b>40 minutes</b>.</li>
+        <li>Write <b>the first half</b> of your essay on your own (<b>about 250 words</b>).</li>
+        <li>Once you write about 250 words, press the <b>Tab</b> key to generate the second half of your essay. You can <b>accept</b>, <b>revise</b>, or <b>reject</b> the AI-generated text, but be sure to <b>read it carefully</b> before making your decision.</li>
+        <li><b>Edit the writing</b> to make the text written by you and AI coherent and clear.</li>
+        <li>Spend <b>at least 40 minutes</b>.</li>
         <li>Once you’re done, click the <b>Save</b> button, which will give you a verification code.</li>
         <li>Copy and paste your full essay and verification code below.</li>
       </ul>
     `,
     d: `
-      <p>In this task, you will write an essay with an AI-powered writing assistant that will generate the first 250 words of your essay.
-      Please write naturally and spontaneously, and avoid overthinking or making the writing overly formal.
-      Do not use any editing tools, grammar checkers, or other external resources to assist your writing.</p>
+      <p><b>Instructions: </b>In this task, you will write a 500-word essay with an AI-powered writing assistant that will generate the first half of your essay. Please write naturally and spontaneously. Do not use any external resources to assist your writing.</p>
       <p>Please follow these guidelines:</p>
       <ul>
-        <li>Press the <b>Tab</b> key at the beginning to generate the first <b>250 words</b> of your essay. You can accept, revise, or reject the AI-generated text.</li>
-        <li>Continue writing from where the AI left off until your essay reaches at least <b>500 words</b>, ensuring it has a clear ending.</li>
-        <li>Spend no more than <b>40 minutes</b>.</li>
+        <li>Press the <b>Tab</b> key <b>at the beginning</b> to generate the first half of your essay (about 250 words). You can <b>accept</b>, <b>revise</b>, or <b>reject</b> the AI-generated text, but be sure to <b>read it carefully</b> before making your decision.</li>
+        <li>Continue writing from where the AI left off until your essay reaches <b>at least 500 words</b>, ensuring it has a clear ending.</li>
+        <li><b>Edit the writing</b> to make the text written by you and AI coherent and clear.</li>
+        <li>Spend <b>at least 30 minutes</b>.</li>
         <li>Once you’re done, click the <b>Save</b> button, which will give you a verification code.</li>
         <li>Copy and paste your full essay and verification code below.</li>
       </ul>
     `,
     e: `
-      <p>In this task, you will write an essay.
-      Please write naturally and spontaneously, and avoid overthinking or making the writing overly formal.
-      Do not use any editing tools, grammar checkers, or other external resources to assist your writing.</p>
+      <p><b>Instructions: </b>In this task, you will write an essay. Please write naturally and spontaneously. Do not use any external resources to assist your writing.</p>
       <p>Please follow these guidelines:</p>
       <ul>
-        <li>Your essay should be at least <b>500 words</b> and have a clear ending.</li>
-        <li>You should spend no more than <b>40 minutes</b> on this task.</li>
+        <li>Your essay should be <b>at least 500 words</b>, ensuring it has a clear ending.</li>
+        <li>Spend <b>at least 40 minutes</b>.</li>
         <li>Once you’re done, click the <b>Save</b> button, which will give you a verification code.</li>
         <li>Copy and paste your full essay and verification code below.</li>
+      </ul>
+    `,
+    f: `
+      <p><b>Instructions: </b>In this task, you will write using an AI-powered writing assistant that can help you continue your sentences by suggesting 3-5 words at a time. Please write naturally and spontaneously. Do not use any external resources to assist your writing.  </p>
+      <p>Please follow these guidelines:</p>
+      <ul>
+        <li>If you want the AI to continue an unfinished sentence with 3-5 words, press the <b>Tab</b> key. You can <b>accept</b>, <b>revise</b>, or <b>reject</b> the continuation.</li>
+        <li>Use the sentence continuation/generation function <b>at least 5 times</b>.</li>
+        <li>Your essay should be <b>at least 500 words</b>, ensuring it has a clear ending.</li>
+        <li>Spend <b>at least 40 minutes</b>.</li>
+        <li>Once you’re done, click the <b>Save</b> button, which will give you a verification code.</li>
+        <li>Copy and paste your essay and verification code below.</li>
       </ul>
     `
   };
@@ -97,7 +101,7 @@ $(function() {
 
     // 添加文字到 p 标签中
   const promptText = "Everyone’s on social media these days, but does it actually help people stay connected, or does it just make us feel more alone? What’s your take on it? Have you noticed a difference in your own friendships?";
-  document.getElementById("prompt-text").innerText = promptText;
+  document.getElementById("prompt-text").innerHTML = '<b>Topic: </b>' + promptText;
 
   if (condition == 'human') {
     setupEditorHumanOnly();

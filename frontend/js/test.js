@@ -44,8 +44,6 @@ document.addEventListener("DOMContentLoaded", function () {
         "This is a test suggestion.",
         "Another possible completion.",
         "Try this sentence instead.",
-        "An alternative phrasing for your text.",
-        "Here’s a different way to express that idea."
     ];
 
     // 监听 Tab 和 F1 键，模拟 AI 交互
@@ -75,21 +73,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // 生成建议
         const fakeSuggestions1 = [
-            "This is a test suggestion.",
-            "Another possible completion.",
-            "Try this sentence instead.",
-            "An alternative phrasing for your text.",
-            "Here’s a different way to express that idea."
+            "The week is just getting started, and there’s a lot to do.",
+            "I’m already looking forward to the weekend.",
+            "Let’s make it a productive day!",
         ];
         const fakeSuggestions2 = [
-            "Original: Some text.",
-            "Revised: Some text get fixed by Chatgpt.",
+            "Original: Today is Monday.",
+            "Revised: It’s Monday today.",
         ];
         if (type === 'a') {
             fakeSuggestions2.forEach((suggestion, index) => {
                 const item = document.createElement("div");
                 item.classList.add("dropdown-item");
                 item.textContent = suggestion;
+                quill.deleteText(0, quill.getLength());
+                suggestion = suggestion.replace(/^Revised:\s*/, '').replace(/^Original:\s*/, '');
+
                 item.addEventListener("click", function () {
                     insertSuggestion(suggestion);
                 });
