@@ -47,14 +47,24 @@ async function startSession(accessCode) {
   }
 }
 
-async function endSession() {
+async function endSession(type) {
 // 获取文本框的内容
-  const storyText = document.getElementById("story-text").value;
+//  const storyText = document.getElementById("story-text").value;
+  let storyText = getText();
+  let lastIndex = storyText.length;
+  if (lastIndex < 500) {
+    alert('Your essay should be at least 500 words, ensuring it has a clear ending!');
+    return
+  }
+
   const results = await wwai.api.endSession(sessionId, logs, storyText);
   const verificationCode = results['verification_code'];
 
   $('#verification-code').removeClass('do-not-display');
   $('#verification-code').html('Verification code: ' + verificationCode);
+  $('#next-btn').removeClass('do-not-display');
+  window.location.href = `feedback.html?access_code=demo&type=${type}&code=${verificationCode}`;
+
 }
 
 async function endSessionWithReplay() {
@@ -400,28 +410,28 @@ You will see each prompt one at a time. Once you finish the first essay, you wil
 }
 
 function queryGPT4ForSuggestions() {
-  const range = quill.getSelection(); // 获取选中范围或光标位置
+  const range = quill.getSelection(); // Get the selected range or cursor position
   if (!range) {
     alert("Please place the cursor in the sentence or select text to check the grammar.");
     return;
   }
 
-  const text = quill.getText(); // 获取编辑器的全文
-  let doc = ""; // 用于存储最终提取的文本
+  const text = quill.getText(); // get the text of the editor
+  let doc = ""; // Used to store the final extracted text
 
   if (range.length > 0) {
-    // 用户选中了一段范围，提取范围内完整的句子
+    // The user selects a range and extracts the complete sentences within the range
     doc = findSentencesInRange(text, range);
     console.log("Selected range detected. Extracted text:", doc);
   } else {
-    // 用户没有选中范围，使用光标所在句子的提取逻辑
+    // The user has no range selected and uses the extraction logic of the sentence where the cursor is located
     const cursorIndex = range.index;
     const { start, end } = findSentenceBoundary(text, cursorIndex);
     doc = text.slice(start, end).trim();
     console.log("Cursor detected. Extracted sentence:", doc);
   }
 
-  // 检查提取的文本是否有效
+  // Check the validity of the extracted text
   if (!doc) {
     alert("No sentence or text found for processing.");
     return;
@@ -436,13 +446,12 @@ You will see each prompt one at a time. Once you finish the first essay, you wil
 
   const prompt = `Everyone’s on social media these days, but does it actually help people stay connected, or does it just make us feel more alone? What’s your take on it? Have you noticed a difference in your own friendships?`;
 
-  // 创建 data 对象
+  // create data
   const data = getDataForQuery(doc, text);
-  data.instructions = instructions; // 添加 instructions
-  data.prompt = prompt; // 添加 prompt
+  data.instructions = instructions; // add instructions
+  data.prompt = prompt; // add prompt
   data.type = 'grammar';
 
-  // 发送 AJAX 请求
   $.ajax({
     url: serverURL + '/api/query',
     beforeSend: function () {
@@ -461,7 +470,7 @@ You will see each prompt one at a time. Once you finish the first essay, you wil
         if (data.suggestions_with_probabilities.length > 0) {
           const updatedSuggestions = data.suggestions_with_probabilities.map((suggestion) => ({
             ...suggestion,
-            range: range, // 将 range 添加到每个 suggestion 中
+            range: range, // Add range to each suggestion
           }));
           addSuggestionsToDropdown(updatedSuggestions, doc);
           showDropdownMenu('api');
@@ -487,24 +496,24 @@ You will see each prompt one at a time. Once you finish the first essay, you wil
   });
 }
 
-// 提取选中范围的完整句子
+// Extract complete sentences from the selected range
 function findSentencesInRange(text, range) {
-  const start = range.index; // 选中范围起始位置
-  const end = range.index + range.length; // 选中范围结束位置
+  const start = range.index; // Selected range start position
+  const end = range.index + range.length; // Selection of the end position of the range
 
-  // 向前查找最近的句号或问号
+  // Forward to find the nearest full stop or question mark
   let sentenceStart = Math.max(
     text.lastIndexOf('.', start - 1),
     text.lastIndexOf('?', start - 1)
   ) + 1;
 
-  // 向后查找最近的句号或问号
+  // Look backward for the nearest full stop or question mark
   let sentenceEnd = Math.min(
     text.indexOf('.', end) === -1 ? text.length : text.indexOf('.', end),
     text.indexOf('?', end) === -1 ? text.length : text.indexOf('?', end)
   ) + 1;
 
-  // 修正范围，确保包括空格和完整句子
+  // Correct the scope to ensure that spaces and complete sentences are included
   sentenceStart = Math.max(sentenceStart, 0);
   sentenceEnd = Math.min(sentenceEnd, text.length);
 
@@ -513,7 +522,7 @@ function findSentencesInRange(text, range) {
   return extractedText;
 }
 
-// 提取光标所在句子的边界
+// Extract the boundary of the sentence where the cursor is located
 function findSentenceBoundary(text, cursorIndex) {
   const lastPeriod = text.lastIndexOf('.', cursorIndex - 1);
   const lastQuestionMark = text.lastIndexOf('?', cursorIndex - 1);

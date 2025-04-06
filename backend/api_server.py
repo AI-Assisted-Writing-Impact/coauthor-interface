@@ -21,7 +21,7 @@ from helper import (
     print_verbose, print_current_sessions,
     get_uuid, retrieve_log_paths,
     append_session_to_file, get_context_window_size,
-    save_log_to_jsonl, save_story_to_json, compute_stats, get_last_text_from_log, get_config_for_log,
+    save_log_to_jsonl, save_story_to_json, save_info_to_json, compute_stats, get_last_text_from_log, get_config_for_log,
 )
 from parsing import (
     parse_prompt, parse_suggestion, parse_probability,
@@ -140,7 +140,7 @@ def end_session():
     try:
         save_log_to_jsonl(path, log)
 
-        # 额外存储 storyText 为 JSON 文件
+        # store storyText as JSON
         save_story_to_json(story_path, story_text)
 
         results['status'] = SUCCESS
@@ -179,7 +179,7 @@ def query():
     session_id = content['session_id']
     domain = content['domain']
     prev_suggestions = content['suggestions']
-    query_type = content.get('type', 'default')  # 类型参数：default 或 grammar
+    query_type = content.get('type', 'default')  # default or grammar
 
     results = {}
     try:
@@ -277,7 +277,7 @@ def query():
                         "content": f"Please generate the first 250 words of an essay based on this topic:\n\n{prompt}"
                     }
                 ]
-                max_tokens = 500  # 250 词大约需要 350 tokens
+                max_tokens = 500
 
         elif query_type == 'f':
             messages = [
@@ -424,6 +424,31 @@ def get_log():
     print_verbose('Get log', results, verbose)
     return results
 
+@app.route('/api/save_user_info', methods=['POST'])
+@cross_origin(origin='*')
+def save_user_info():
+    content = request.json
+    code = content.get('code')
+    results = {}
+
+    try:
+        # 添加时间戳
+        content['timestamp'] = time()
+
+        # 文件路径
+        path = os.path.join(proj_dir, f"{code}_userinfo.json")
+
+        # 使用和 end_session 一致的保存函数
+        save_info_to_json(path, content)
+
+        results['status'] = SUCCESS
+        results['path'] = path
+    except Exception as e:
+        results['status'] = FAILURE
+        results['message'] = str(e)
+        print(e)
+
+    return jsonify(results)
 
 if __name__ == '__main__':
     parser = ArgumentParser()
@@ -494,3 +519,6 @@ if __name__ == '__main__':
         port=args.port,
         debug=args.debug,
     )
+
+
+

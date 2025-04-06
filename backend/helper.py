@@ -111,6 +111,11 @@ def save_story_to_json(path, story_text):
     with open(path, 'w', encoding='utf-8') as f:  # 覆盖已有文件
         json.dump({"storyText": story_text}, f, ensure_ascii=False, indent=4)
 
+def save_info_to_json(path, info_text):
+    """Save the story text to a JSON file."""
+    with open(path, 'w', encoding='utf-8') as f:  # 覆盖已有文件
+        json.dump({"info": info_text}, f, ensure_ascii=False, indent=4)
+
 
 def compute_stats(log):
     event_names = []

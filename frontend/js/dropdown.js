@@ -32,48 +32,48 @@ function selectDropdownItem(suggestion, range, type) {
     const text = quill.getText();
 
       if (range && range.length > 0) {
-        // 如果有选中范围，直接替换选中范围内的内容
-        const rangeStart = range.index; // 选中范围的起始位置
-        const rangeEnd = range.index + range.length; // 选中范围的结束位置
+        // If there is a selection range, directly replace the contents of the selection range
+        const rangeStart = range.index; // Start position of the selected range
+        const rangeEnd = range.index + range.length; // End position of the selected range
 
-        // 获取选中范围内的完整句子
+        // Get the complete sentence in the selected range
         const leadingSpaces = findSentencesInRange(text, range);
 
-        quill.deleteText(rangeStart, rangeStart + leadingSpaces.length); // 删除选中范围的内容
-        quill.insertText(rangeStart, suggestion, { color: '#4169E1' }); // 插入建议文本并保留前导空格
-        quill.setSelection(rangeStart + suggestion.length, 0); // 将光标移动到新句子末尾
+        quill.deleteText(rangeStart, rangeStart + leadingSpaces.length); // Delete the contents of the selected range
+        quill.insertText(rangeStart, suggestion, { color: '#4169E1' }); // Insert suggested text and retain leading spaces
+        quill.setSelection(rangeStart + suggestion.length, 0); // Move the cursor to the end of the new sentence
 
       } else {
-        // 如果没有选中范围，则替换光标所在的句子
+        // If no range is selected, replace the sentence where the cursor is located
         const cursorIndex = range.index;
 
-        // 找到当前句子的起始位置
+        // Find the start of the current sentence
         let start = Math.max(
           text.lastIndexOf('.', cursorIndex - 1),
           text.lastIndexOf('?', cursorIndex - 1)
         ) + 1;
 
-        // 保留句子起点之前的空格
+        // Retain the space before the start of the sentence
         while (start > 0 && text[start - 1] === ' ') {
           start--;
         }
 
-        // 找到当前句子的结束位置
+        // Find the end of the current sentence
         const end = Math.min(
           text.indexOf('.', cursorIndex) === -1 ? text.length : text.indexOf('.', cursorIndex),
           text.indexOf('?', cursorIndex) === -1 ? text.length : text.indexOf('?', cursorIndex)
         ) + 1;
 
-        // 获取当前句子前面的空格
+        // Get the space in front of the current sentence
         const leadingSpaces = text.slice(start, cursorIndex).match(/^\s*/)[0];
 
-        // 替换光标所在句子的内容
-        quill.deleteText(start, end - start); // 删除当前句子
-        quill.insertText(start, leadingSpaces + suggestion, { color: '#4169E1' }); // 插入新的建议并保留空格
-        quill.setSelection(start + leadingSpaces.length + suggestion.length, 0); // 将光标移动到新句子末尾
+        // Replace the contents of the sentence where the cursor is located
+        quill.deleteText(start, end - start); // Delete the current sentence
+        quill.insertText(start, leadingSpaces + suggestion, { color: '#4169E1' }); // Insert new recommendations and retain spaces
+        quill.setSelection(start + leadingSpaces.length + suggestion.length, 0); // Move the cursor to the end of the new sentence
       }
 
-      // 重置光标后的样式为默认颜色
+      // Style after resetting the cursor to the default colour
       quill.format('color', null);
   }
   else {
@@ -88,24 +88,24 @@ function selectDropdownItem(suggestion, range, type) {
     emptyDropdownMenu();
   }
 }
-// 提取选中范围的完整句子
+// Extract complete sentences from the selected range
 function findSentencesInRange(text, range) {
-  const start = range.index; // 选中范围起始位置
-  const end = range.index + range.length; // 选中范围结束位置
+  const start = range.index; // Selected range start position
+  const end = range.index + range.length; // Selection of the end position of the range
 
-  // 向前查找最近的句号或问号
+  // Forward to find the nearest full stop or question mark
   let sentenceStart = Math.max(
     text.lastIndexOf('.', start - 1),
     text.lastIndexOf('?', start - 1)
   ) + 1;
 
-  // 向后查找最近的句号或问号
+  // Look backward for the nearest full stop or question mark
   let sentenceEnd = Math.min(
     text.indexOf('.', end) === -1 ? text.length : text.indexOf('.', end),
     text.indexOf('?', end) === -1 ? text.length : text.indexOf('?', end)
   ) + 1;
 
-  // 修正范围，确保包括空格和完整句子
+  // Correct the scope to ensure that spaces and complete sentences are included
   sentenceStart = Math.max(sentenceStart, 0);
   sentenceEnd = Math.min(sentenceEnd, text.length);
 
@@ -126,17 +126,17 @@ function addToDropdownMenu(suggestion_with_probability
   let source = suggestion_with_probability['source'];  // Could be empty
 
   if (plainText && plainText.length > 0) {
-      // 创建菜单项
+      // Creating menu items
       const $menuItem = $('<div class="dropdown-item">')
         .text(content)
         .click(function () {
-          selectDropdownItem(plainText, range, 'grammar'); // 替换时使用 plainText
+          selectDropdownItem(plainText, range, 'grammar'); // Use plainText when replacing
         })
         .mouseover(function () {
           logEvent(EventName.SUGGESTION_HOVER, EventSource.USER);
         });
 
-      // 追加到下拉菜单
+      // Append to drop-down menu
       $('#frontend-overlay').append($menuItem);
   }
   else {
@@ -172,27 +172,27 @@ function reverse_sort_by_probability(a, b) {
 function addSuggestionsToDropdown(suggestions_with_probabilities, doc) {
   emptyDropdownMenu();
 
-  // 如果传入了 doc，则处理原始句子和第一条建议
+  // If doc is passed in, the original sentence and the first suggestion are processed
   if (doc && suggestions_with_probabilities && suggestions_with_probabilities.length > 0) {
-    // 显示原始句子
+    // Show original sentence
     addToDropdownMenu({
-      content: `Original: ${doc}`, // 显示的内容带前缀
-      plainText: doc, // 替换时的实际内容
+      content: `Original: ${doc}`, // Displayed content with prefix
+      plainText: doc, // Actual content at the time of replacement
       isOriginal: true,
       range: suggestions_with_probabilities[0]?.range || null,
     });
 
-    // 显示第一条建议
+    // Show first recommendation
     const firstSuggestion = suggestions_with_probabilities[0];
     addToDropdownMenu({
-      content: `Revised: ${firstSuggestion.trimmed}`, // 显示的内容带前缀
-      plainText: firstSuggestion.trimmed, // 替换时的实际内容
+      content: `Revised: ${firstSuggestion.trimmed}`, // Displayed content with prefix
+      plainText: firstSuggestion.trimmed, // Actual content at the time of replacement
       probability: firstSuggestion.probability,
       range: firstSuggestion.range,
       isOriginal: false,
     });
   } else {
-    // 如果没有传入 doc，则按原始逻辑处理
+    // If no doc is passed in, the original logic is followed
     if (sortSuggestions === true) {
       suggestions_with_probabilities.sort(reverse_sort_by_probability);
     }
@@ -202,7 +202,7 @@ function addSuggestionsToDropdown(suggestions_with_probabilities, doc) {
       }
   }
 
-  // 更新下拉菜单项的全局状态
+  // Update the global status of drop-down menu items
   items = $('.dropdown-item');
   numItems = items.length;
   currentIndex = 0;

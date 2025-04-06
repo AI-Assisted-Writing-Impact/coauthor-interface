@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>CoAuthor</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex"> <!-- Prevent this page from being indexed -->
+
+    <link rel="icon" type="image/png" href="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/240/apple/285/writing-hand_270d-fe0f.png">
+
+    <!-- Redirect to http -->
+    <script>
+      if (location.protocol == "https:") {
+        location.protocol = "http:";
+      }
+    </script>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <!-- Quill Editor -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
+    <!-- Custom -->
+    <link rel="stylesheet" href="./css/animation.css"/>
+    <link rel="stylesheet" href="./css/dropdown.css"/>
+    <link rel="stylesheet" href="./css/index.css"/>
+
+    <!-- Data -->
+    <script>const domain = 'story';</script>
+    <script src="./js/config.js" defer></script>
+    <script src="./js/helper.js" defer></script>
+    <script src="./js/script.js" defer></script>
+    <script src="./js/logging.js" defer></script>
+    <script src="./js/animation.js" defer></script>
+    <script src="./js/editor.js" defer></script>
+    <script src="./js/dropdown.js" defer></script>
+    <script src="./js/async.js" defer></script>
+    <script src="./js/feedback.js" defer></script>
+
+  </head>
+
+  <body>
+    <div id="header" data-toggle="tooltip" data-placement="bottom">
+      <h1 class="text-light">UC CoAuthor
+        <i id='robot' class="fas fa-pen-nib"></i>
+        <i id='setting-btn' class="fa fa-cog" aria-hidden="true"></i>
+      </h1>
+    </div>
+
+    <div id="control">
+      <form class="form-inline">
+        <div class="form-group mx-sm-2">
+          <label for="ctrl-model">model</label>
+          <select id="ctrl-model" class="form-select">
+            <option value="na" selected>N/A</option>
+            <option value="openai/ada">ada</option>
+            <option value="openai/babbage">babbage</option>
+            <option value="openai/curie">curie</option>
+            <option value="openai/davinci">davinci</option>
+            <option value="openai/text-ada-001">text-ada-001</option>
+            <option value="openai/text-babbage-001">text-babbage-001</option>
+            <option value="openai/text-curie-001">text-curie-001</option>
+            <option value="openai/text-davinci-001">text-davinci-001</option>
+            <option value="ai21/j1-large">j1-large</option>
+            <option value="ai21/j1-jumbo">j1-jumbo</option>
+          </select>
+        </div>
+
+        <div class="form-group mx-sm-2">
+          <label for="ctrl-n">n</label>
+          <input type="text" id="ctrl-n" class="form-control">
+        </div>
+
+        <div class="form-group mx-sm-2">
+          <label for="ctrl-max_tokens">max_tokens</label>
+          <input type="text" id="ctrl-max_tokens" class="form-control">
+        </div>
+
+        <div class="form-group mx-sm-2">
+          <label for="ctrl-temperature">temperature</label>
+          <input type="text" id="ctrl-temperature" class="form-control">
+        </div>
+
+        <div class="form-group mx-sm-2">
+          <label for="ctrl-top_p">top_p</label>
+          <input type="text" id="ctrl-top_p" class="form-control">
+        </div>
+
+        <div class="form-group mx-sm-2">
+          <label for="ctrl-presence_penalty">presence_penalty</label>
+          <input type="text" id="ctrl-presence_penalty" class="form-control">
+        </div>
+
+        <div class="form-group mx-sm-2">
+          <label for="ctrl-frequency_penalty">frequency_penalty</label>
+          <input type="text" id="ctrl-frequency_penalty" class="form-control">
+        </div>
+      </form>
+    </div>
+
+    <div class="container mt-4 test-section">
+        <p>We’d like to learn about you. Please answer the following questions as honestly as possible. </p>
+    </div>
+
+    <div class="container mt-4" style="max-width: 800px; margin: auto;">
+      <form id="user-info-form">
+        <!-- Q1 -->
+        <div class="mb-3">
+          <label for="age" class="form-label"><strong>What is your age?</strong></label>
+          <input type="number" class="form-control" id="age" name="age" required>
+        </div>
+
+        <!-- Q2 -->
+        <div class="mb-3">
+          <label class="form-label"><strong>What is your gender?</strong></label><br>
+          <select class="form-select" id="gender" name="gender" required>
+            <option value="">Select...</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="non-binary">Non-binary</option>
+            <option value="prefer_not_to_say">Prefer not to say</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <!-- Q3 -->
+        <div class="mb-3">
+          <label for="education" class="form-label">What is the highest level of education you have completed?</label><br>
+          <select class="form-select" id="education" name="education" required>
+            <option value="">Select...</option>
+            <option value="high_school">High school or equivalent</option>
+            <option value="some_college">Some college</option>
+            <option value="bachelor">Bachelor’s degree</option>
+            <option value="master">Master’s degree</option>
+            <option value="doctorate">Doctoral degree (PhD, EdD, etc.)</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <!-- Q4 -->
+        <div class="mb-3">
+          <label class="form-label"><strong>What is your current occupation?</strong></label>
+          <input type="text" class="form-control" id="occupation" required>
+        </div>
+
+        <!-- Q5 -->
+        <div class="mb-3">
+          <label class="form-label"><strong>How would you describe your ethnicity?</strong></label>
+          <input type="text" class="form-control" id="ethnicity" required>
+        </div>
+
+        <!-- Q6 -->
+        <div class="mb-3">
+          <label class="form-label"><strong>Which variety of English do you primarily speak?</strong></label>
+          <input type="text" class="form-control" id="englishVariety" required placeholder="e.g., American, British">
+        </div>
+
+        <!-- Q7 -->
+        <div class="mb-3">
+          <label class="form-label"><strong>What other languages can you comfortably hold a conversation in?</strong></label>
+          <input type="text" class="form-control" id="otherLanguages" required>
+        </div>
+
+        <!-- Q8 -->
+        <div class="mb-3">
+          <label class="form-label"><strong>In which city and country are you currently located?</strong></label>
+          <input type="text" class="form-control" id="currentLocation" required>
+        </div>
+
+        <!-- Q9 -->
+        <div class="mb-3">
+          <label class="form-label"><strong>Cities and countries where you have lived 5+ years (100km+ away):</strong></label>
+          <input type="text" class="form-control" id="previousLocations" required>
+        </div>
+
+        <!-- Q10 -->
+        <div class="mb-3">
+          <label class="form-label"><strong>How familiar are you with AI?</strong></label><br>
+          <select class="form-select" id="aiFamiliarity" required>
+            <option value="">Select...</option>
+            <option>Not familiar at all</option>
+            <option>Slightly familiar</option>
+            <option>Moderately familiar</option>
+            <option>Very familiar</option>
+            <option>Extremely familiar</option>
+          </select>
+        </div>
+
+        <!-- Q11 -->
+        <div class="mb-3">
+          <label class="form-label"><strong>Which AI tools have you used in the past 3 months?</strong></label><br>
+          <div class="form-check"><input type="checkbox" class="form-check-input" value="ChatGPT" id="tool-chatgpt"> <label class="form-check-label" for="tool-chatgpt">ChatGPT</label></div>
+          <div class="form-check"><input type="checkbox" class="form-check-input" value="Google Bard" id="tool-bard"> <label class="form-check-label" for="tool-bard">Google Bard</label></div>
+          <div class="form-check"><input type="checkbox" class="form-check-input" value="Claude" id="tool-claude"> <label class="form-check-label" for="tool-claude">Claude</label></div>
+          <div class="form-check"><input type="checkbox" class="form-check-input" value="Llama" id="tool-llama"> <label class="form-check-label" for="tool-llama">Llama</label></div>
+          <div class="form-check"><input type="checkbox" class="form-check-input" value="DALL-E" id="tool-dalle"> <label class="form-check-label" for="tool-dalle">DALL-E</label></div>
+          <div class="form-check"><input type="checkbox" class="form-check-input" value="Copilot" id="tool-copilot"> <label class="form-check-label" for="tool-copilot">Copilot</label></div>
+          <div class="form-check"><input type="checkbox" class="form-check-input" value="DeepSeek" id="tool-deepseek"> <label class="form-check-label" for="tool-deepseek">DeepSeek</label></div>
+          <div class="form-check"><input type="checkbox" class="form-check-input" value="None" id="tool-none"> <label class="form-check-label" for="tool-none">I haven't used any AI tools</label></div>
+          <input type="text" class="form-control mt-2" placeholder="Other (please specify)" id="tool-other">
+        </div>
+
+        <!-- Q12 -->
+        <div class="mb-3" id="aiTools">
+          <label class="form-label"><strong>How frequently do you use AI tools?</strong></label>
+          <select class="form-select" id="aiFrequency" required>
+            <option value="">Select...</option>
+            <option>Multiple times per day</option>
+            <option>Daily</option>
+            <option>Several times a week</option>
+            <option>Weekly</option>
+            <option>Monthly</option>
+            <option>Rarely</option>
+            <option>Never</option>
+          </select>
+        </div>
+
+        <!-- Q13 -->
+        <div class="mb-3" id="aiPurposes">
+          <label class="form-label"><strong>What are your primary purposes for using AI?</strong></label><br>
+          <div class="form-check"><input type="checkbox" class="form-check-input" value="Writing assistance" id="use-writing"><label class="form-check-label" for="use-writing">Writing assistance</label></div>
+          <div class="form-check"><input type="checkbox" class="form-check-input" value="Coding help" id="use-coding"><label class="form-check-label" for="use-coding">Coding help</label></div>
+          <div class="form-check"><input type="checkbox" class="form-check-input" value="Research" id="use-research"><label class="form-check-label" for="use-research">Research</label></div>
+          <div class="form-check"><input type="checkbox" class="form-check-input" value="Learning" id="use-learning"><label class="form-check-label" for="use-learning">Learning/studying</label></div>
+          <div class="form-check"><input type="checkbox" class="form-check-input" value="Work tasks" id="use-work"><label class="form-check-label" for="use-work">Work tasks</label></div>
+          <input type="text" class="form-control mt-2" placeholder="Other (please specify)" id="use-other">
+        </div>
+
+        <!-- Q14 -->
+        <div class="mb-3">
+          <label class="form-label"><strong>How would you rate your overall opinion of AI?</strong></label>
+          <select class="form-select" id="aiOpinion" required>
+            <option value="">Select...</option>
+            <option>Very negative</option>
+            <option>Negative</option>
+            <option>Neutral</option>
+            <option>Positive</option>
+            <option>Very positive</option>
+          </select>
+        </div>
+
+        <!-- Q15 -->
+        <div class="mb-3" id="consent">
+          <label class="form-label"><strong>Consent for corpus inclusion:</strong></label><br>
+          <div class="form-check"><input type="radio" class="form-check-input" name="consent" value="Yes" required> <label class="form-check-label">I consent</label></div>
+          <div class="form-check"><input type="radio" class="form-check-input" name="consent" value="No" required> <label class="form-check-label">I don't consent</label></div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="submit-btn" disabled>Next</button>
+      </form>
+    </div>
+
+
+    <div id="frontend-overlay" class="dropdown-menu hidden">
+    </div>
+
+    <div id="alert-box" style="display: none; padding: 40px 20px 20px; border: 1px solid #ccc;">
+      <button id="close-btn" style="float: right; background: none; border: none; font-size: 18px; cursor: pointer;">&times;</button>
+      <p id="alert-message"></p>
+    </div>
+
+    <!-- Bootstrap -->
+    <script src="./lib/jquery-3.5.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/ec39425d5e.js" crossorigin="anonymous"></script>
+
+    <!-- Include the Quill library -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+  </body>
+</html>
+<style>
+  .invalid {
+  border: 2px solid red;
+  padding: 10px;
+  border-radius: 4px;
+}
+</style>

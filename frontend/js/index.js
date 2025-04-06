@@ -5,7 +5,7 @@ function getUrlParameter(name) {
 $(function() {
   startBlinking();
 
-  const type = getUrlParameter('type'); // 获取 URL 中的 type 参数
+  const type = getUrlParameter('type'); // get type from the url
 
   // 定义不同类型的 instructions
   const instructionsMap = {
@@ -87,19 +87,19 @@ $(function() {
     $("#instructions-content").html("<p>Invalid type. Please check the URL.</p>");
   }
 
-  // 根据 type 参数显示或隐藏特定的功能
+  // Show or hide specific functions based on the type parameter
   if (type === 'a') {
-    $('#suggestion').hide(); // 隐藏 suggestion
-    $('#grammar').show();    // 显示 grammar
+    $('#suggestion').hide(); // hide suggestion
+    $('#grammar').show();    // show grammar
   } else if (type === 'b' || type === 'c' || type === 'd'|| type === 'f') {
-    $('#suggestion').show(); // 显示 suggestion
-    $('#grammar').hide();    // 隐藏 grammar
+    $('#suggestion').show(); // show suggestion
+    $('#grammar').hide();    // hide grammar
   } else if (type === 'e') {
     $('#shortcuts').hide();
   }
 
 
-    // 添加文字到 p 标签中
+    // Adding text to p
   const promptText = "Everyone’s on social media these days, but does it actually help people stay connected, or does it just make us feel more alone? What’s your take on it? Have you noticed a difference in your own friendships?";
   document.getElementById("prompt-text").innerHTML = '<b>Topic: </b>' + promptText;
 
@@ -118,6 +118,7 @@ $(function() {
     $('#setting-btn').click(function(e) {
       $('#control').toggleClass('show');
     });
+    $('#finish-btn').prop('disabled', false);
     $('#finish-replay-btn').prop('disabled', false);
   }
 
@@ -205,40 +206,40 @@ $(function() {
   $('#shortcuts-open-btn').click(function(e) {
     openShortcuts();
   });
-  const finishBtn = document.getElementById("finish-btn");
-  finishBtn.disabled = true;
-    const storyText = document.getElementById("story-text");
-    const clearEnding = document.getElementById("clear-ending");
-    const aiCollaboration = document.getElementById("ai-collaboration");
+//  const finishBtn = document.getElementById("finish-btn");
+//  finishBtn.disabled = true;
+//    const storyText = document.getElementById("story-text");
+//    const clearEnding = document.getElementById("clear-ending");
+//    const aiCollaboration = document.getElementById("ai-collaboration");
 
-    function validateForm() {
-        if (storyText.value.trim() !== "" && clearEnding.checked && aiCollaboration.checked) {
-            finishBtn.disabled = false; // 启用按钮
-        } else {
-            finishBtn.disabled = true;  // 禁用按钮
-        }
-    }
-
-    // 监听输入变化
-    storyText.addEventListener("input", validateForm);
-    clearEnding.addEventListener("change", validateForm);
-    aiCollaboration.addEventListener("change", validateForm);
-
-    // **在页面加载时执行一次，确保初始状态**
-    validateForm();
+//    function validateForm() {
+//        if (storyText.value.trim() !== "" && clearEnding.checked && aiCollaboration.checked) {
+//            finishBtn.disabled = false; // able button
+//        } else {
+//            finishBtn.disabled = true;  // disable button
+//        }
+//    }
+//
+//    // Listen for changes in the input field
+//    storyText.addEventListener("input", validateForm);
+//    clearEnding.addEventListener("change", validateForm);
+//    aiCollaboration.addEventListener("change", validateForm);
+//
+//    // Executed once on page load to ensure initial state
+//    validateForm();
   $('#finish-btn').click(function(e) {
-    if (storyText.value.trim() !== "" && clearEnding.checked && aiCollaboration.checked) {
-        endSession();
-    }
+//    if (storyText.value.trim() !== "" && clearEnding.checked && aiCollaboration.checked) {
+        endSession(type);
+//    }
   });
-  $('#finish-replay-btn').click(function(e) {
-    endSessionWithReplay();
-  });
+//  $('#finish-replay-btn').click(function(e) {
+//    endSessionWithReplay();
+//  });
 
     $('#close-btn').click(function(e) {
         const alertBox = document.getElementById('alert-box');
               if (alertBox) {
-                alertBox.style.display = 'none'; // 隐藏弹框
+                alertBox.style.display = 'none'; // hide
               }
       });
 

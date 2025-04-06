@@ -110,7 +110,7 @@ function startTimer(timeInSeconds){
     $('.countdown').html('00:00');
     if (domain == 'metaphor') {
     } else {
-//      $('#finish-btn').prop('disabled', false);
+      $('#finish-btn').prop('disabled', false);
       $('#finish-replay-btn').prop('disabled', false);
     }
 
@@ -142,11 +142,11 @@ function startTimer(timeInSeconds){
     if ((seconds == 0) && (minutes == 0)) {
       if (domain == 'metaphor') {
         alert('Your time is up! Please click the "Finish session" button on the bottom to save this session.');
-//        $('#finish-btn').prop('disabled', false);
-//        $('#finish-btn').removeClass('btn-inactive');
-//        $('#finish-btn').addClass('btn-active');
+        $('#finish-btn').prop('disabled', false);
+        $('#finish-btn').removeClass('btn-inactive');
+        $('#finish-btn').addClass('btn-active');
       } else {
-//        $('#finish-btn').prop('disabled', false);
+        $('#finish-btn').prop('disabled', false);
         $('#finish-replay-btn').prop('disabled', false);
       }
     }
