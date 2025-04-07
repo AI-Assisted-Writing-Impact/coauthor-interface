@@ -210,6 +210,17 @@ function setupEditorMachineOnly() {
     }
   });
 
+  // Prohibition of copying and pasting
+  const editorElement = document.querySelector('#editor-container');
+  editorElement.addEventListener('copy', function (e) {
+    e.preventDefault();
+    alert('Copy is disabled.');
+  });
+  editorElement.addEventListener('paste', function (e) {
+    e.preventDefault();
+    alert('Paste is disabled.');
+  });
+
   trackTextChangesByMachineOnly();
   trackSelectionChange();
 
@@ -301,6 +312,17 @@ function setupEditor() {
     // Initialize word count on page load
     updateWordCount();
 
+    // Prohibition of copying and pasting
+  const editorElement = document.querySelector('#editor-container');
+  editorElement.addEventListener('copy', function (e) {
+    e.preventDefault();
+    alert('Copy is disabled.');
+  });
+  editorElement.addEventListener('paste', function (e) {
+    e.preventDefault();
+    alert('Paste is disabled.');
+  });
+
   trackTextChanges();
   trackSelectionChange();
 
@@ -375,34 +397,34 @@ function showAlert(message) {
   const alertMessage = document.getElementById('alert-message');
 
   if (alertBox && alertMessage) {
-    alertMessage.textContent = message; // 设置消息内容
-    alertBox.style.display = 'block'; // 显示弹框
+    alertMessage.textContent = message; // Setting the message content
+    alertBox.style.display = 'block'; // show alert
   } else {
     console.error("Alert box or message element not found");
   }
 }
-var hasUserStartedWriting = false; // 记录用户是否已开始输入
+var hasUserStartedWriting = false; // Records whether the user has started typing
 
 function trackTextChanges() {
   quill.on('text-change', function (delta, oldDelta, source) {
     if (source == 'silent') {
       return;
     } else {
-      // 获取 URL 参数中的 type
+      // Get the type in the URL parameter
       const type = getUrlParameter('type');
 
-      // 如果 type 是 'd'，监听用户首次输入
+      // If type is ‘d’, listen for the first user input.
       if (type === 'd' && !hasUserStartedWriting) {
-        const text = quill.getText().trim(); // 获取编辑器文本
+        const text = quill.getText().trim(); // get text
         if (text.length === 1) {
            alert("Press the Tab key to generate the first 250 words of your essay.");
            return
         } else {
-          hasUserStartedWriting = true; // 标记用户已经开始输入
+          hasUserStartedWriting = true; // Marks that the user has started typing
         }
       }
 
-      // 其他日志处理
+      // Other logging
       eventName = null;
       eventSource = sourceToEventSource(source);
       ops = new Array();
