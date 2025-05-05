@@ -216,10 +216,10 @@ function setupEditorMachineOnly() {
     e.preventDefault();
     alert('Copy is disabled.');
   });
-  editorElement.addEventListener('paste', function (e) {
-    e.preventDefault();
-    alert('Paste is disabled.');
-  });
+//  editorElement.addEventListener('paste', function (e) {
+//    e.preventDefault();
+//    alert('Paste is disabled.');
+//  });
 
   trackTextChangesByMachineOnly();
   trackSelectionChange();
@@ -318,10 +318,10 @@ function setupEditor() {
     e.preventDefault();
     alert('Copy is disabled.');
   });
-  editorElement.addEventListener('paste', function (e) {
-    e.preventDefault();
-    alert('Paste is disabled.');
-  });
+//  editorElement.addEventListener('paste', function (e) {
+//    e.preventDefault();
+//    alert('Paste is disabled.');
+//  });
 
   trackTextChanges();
   trackSelectionChange();

@@ -121,7 +121,7 @@ document.getElementById('user-info-form').addEventListener('submit', async funct
     contentType: 'application/json; charset=utf-8',
     success: function (res) {
       if (res.status === true) {
-        window.location.href = `completed.html`;
+        window.location.replace("completed.html");
       } else {
         alert("Save failed: " + res.message);
         $('#next-page-btn').prop("disabled", false).text("Next Page");

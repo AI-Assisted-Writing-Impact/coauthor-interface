@@ -233,7 +233,7 @@ def query():
         messages = [
             {
                 "role": "system",
-                "content": "You are an AI assistant that provides grammar and style suggestions. "
+                "content": "You are an AI writing assistant. Review the following text for grammar and style improvements. Suggest changes that enhance clarity, coherence, and correctness while preserving the original meaning and tone. Do not provide explanations. "
                            "Only return the modified version of the text if changes are made."
             },
             {
@@ -249,7 +249,7 @@ def query():
             messages = [
                 {
                     "role": "system",
-                    "content": f"You are a writing assistant. Write **exactly** 250 words to continue the given text. "
+                    "content": "You are an AI writing assistant. Continue the following text with approximately 250 words."
                                f"Ensure the continuation is coherent, relevant, and does not stop prematurely. "
                                f"Follow these instructions:\n\n"
                                f"{instructions}\n\n"
@@ -266,7 +266,7 @@ def query():
                 messages = [
                     {
                         "role": "system",
-                        "content": f"You are a writing assistant. Write approximately 250 words of an essay on the given topic. "
+                        "content": "You are an AI writing assistant. Generate approximately 250 words of a 500-word text on the following topic."
                                    f"Ensure the output consists of about 250 words, not 250 characters. "
                                    f"Keep it coherent, relevant, and do not stop prematurely. Follow these instructions:\n\n"
                                    f"{instructions}\n\n"
@@ -283,7 +283,7 @@ def query():
             messages = [
                 {
                     "role": "system",
-                    "content": f"You are a writing assistant. Write approximately 3 words to continue the given text. Follow these instructions:\n\n"
+                    "content": "You are an AI writing assistant. Continue the following text by adding 3-5 words in a coherent and natural way, expanding the ideas logically. Do not provide explanations."
                                f"{instructions}\n\n"
                                f"Prompt:\n{prompt_text}\n\n"
                 },
@@ -298,7 +298,7 @@ def query():
             messages = [
                 {
                     "role": "system",
-                    "content": f"You are a writing assistant. Continue the text with exactly one relevant and complete sentence. Follow these instructions:\n\n"
+                    "content": "You are an AI writing assistant. Continue the following text by adding one sentence in a coherent and natural way, expanding the ideas logically. Do not provide explanations."
                                f"{instructions}\n\n"
                                f"Prompt:\n{prompt_text}\n\n"
                 },

@@ -6,7 +6,7 @@ $(function() {
   startBlinking();
 
   const type = getUrlParameter('type'); // get type from the url
-
+  const topic = getUrlParameter('topic');
   // 定义不同类型的 instructions
   const instructionsMap = {
     a: `
@@ -100,8 +100,11 @@ $(function() {
 
 
     // Adding text to p
-  const promptText = "Everyone’s on social media these days, but does it actually help people stay connected, or does it just make us feel more alone? What’s your take on it? Have you noticed a difference in your own friendships?";
+  const promptText = prompts[topic] || "Invalid topic type.";
+  console.log(topic,prompts[topic])
+
   document.getElementById("prompt-text").innerHTML = '<b>Topic: </b>' + promptText;
+
 
   if (condition == 'human') {
     setupEditorHumanOnly();

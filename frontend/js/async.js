@@ -52,7 +52,7 @@ async function endSession(type) {
 //  const storyText = document.getElementById("story-text").value;
   let storyText = getText();
   let lastIndex = storyText.length;
-  if (lastIndex < 500) {
+  if (lastIndex < 5) {
     alert('Your essay should be at least 500 words, ensuring it has a clear ending!');
     return
   }
@@ -63,8 +63,7 @@ async function endSession(type) {
   $('#verification-code').removeClass('do-not-display');
   $('#verification-code').html('Verification code: ' + verificationCode);
   $('#next-btn').removeClass('do-not-display');
-  window.location.href = `feedback.html?access_code=demo&type=${type}&code=${verificationCode}`;
-
+  window.location.replace(`feedback.html?access_code=demo&type=${type}&code=${verificationCode}`);
 }
 
 async function endSessionWithReplay() {
@@ -353,8 +352,8 @@ Do not use any editing tools, grammar checkers, or other external resources to a
 Spend no more than 40 minutes per essay.
 You will see each prompt one at a time. Once you finish the first essay, you will proceed to the second prompt.`;
 
-  const prompt = `Everyone’s on social media these days, but does it actually help people stay connected, or does it just make us feel more alone? What’s your take on it? Have you noticed a difference in your own friendships?`;
-
+   const topic = getUrlParameter('topic'); // 从 URL 获取 type
+    const prompt = prompts[topic] || "No matching prompt found."; // 使用 prompts.js 中的内容
   // 创建 data 对象
   const data = getDataForQuery(doc, exampleText);
   data.instructions = instructions; // 添加 instructions
@@ -443,8 +442,8 @@ Each essay should be at least 500 words.
 Do not use any editing tools, grammar checkers, or other external resources to assist your writing.
 Spend no more than 40 minutes per essay.
 You will see each prompt one at a time. Once you finish the first essay, you will proceed to the second prompt.`;
-
-  const prompt = `Everyone’s on social media these days, but does it actually help people stay connected, or does it just make us feel more alone? What’s your take on it? Have you noticed a difference in your own friendships?`;
+    const topic = getUrlParameter('topic'); // 从 URL 获取 type
+    const prompt = prompts[topic] || "No matching prompt found."; // 使用 prompts.js 中的内容
 
   // create data
   const data = getDataForQuery(doc, text);
