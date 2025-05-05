@@ -52,7 +52,7 @@ async function endSession(type) {
 //  const storyText = document.getElementById("story-text").value;
   let storyText = getText();
   let lastIndex = storyText.length;
-  if (lastIndex < 5) {
+  if (lastIndex < 500) {
     alert('Your essay should be at least 500 words, ensuring it has a clear ending!');
     return
   }
