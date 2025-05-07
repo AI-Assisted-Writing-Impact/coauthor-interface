@@ -17,8 +17,7 @@ $(function() {
         <li>Use this grammar and style suggestions function <b>at least 5 times</b>.</li>
         <li>Your essay should be <b>at least 500 words</b>, ensuring it has a clear ending.</li>
         <li>Spend <b>at least 40 minutes</b>.</li>
-        <li>Once you’re done, click the <b>Save</b> button, which will give you a verification code.</li>
-        <li>Copy and paste your essay and verification code below.</li>
+        <li>Once you’re done, click the <b>Save</b> button.</li>
       </ul>
     `,
     b: `
@@ -29,8 +28,7 @@ $(function() {
         <li>Use the sentence continuation/generation function <b>at least 5 times</b>.</li>
         <li>Your essay should be <b>at least 500 words</b>, ensuring it has a clear ending.</li>
         <li>Spend <b>at least 40 minutes</b>.</li>
-        <li>Once you’re done, click the <b>Save</b> button, which will give you a verification code.</li>
-        <li>Copy and paste your essay and verification code below.</li>
+        <li>Once you’re done, click the <b>Save</b> button.</li>
       </ul>
     `,
     c: `
@@ -41,8 +39,7 @@ $(function() {
         <li>Once you write about 250 words, press the <b>Tab</b> key to generate the second half of your essay. You can <b>accept</b>, <b>revise</b>, or <b>reject</b> the AI-generated text, but be sure to <b>read it carefully</b> before making your decision.</li>
         <li><b>Edit the writing</b> to make the text written by you and AI coherent and clear.</li>
         <li>Spend <b>at least 40 minutes</b>.</li>
-        <li>Once you’re done, click the <b>Save</b> button, which will give you a verification code.</li>
-        <li>Copy and paste your full essay and verification code below.</li>
+        <li>Once you’re done, click the <b>Save</b> button.</li>
       </ul>
     `,
     d: `
@@ -52,9 +49,8 @@ $(function() {
         <li>Press the <b>Tab</b> key <b>at the beginning</b> to generate the first half of your essay (about 250 words). You can <b>accept</b>, <b>revise</b>, or <b>reject</b> the AI-generated text, but be sure to <b>read it carefully</b> before making your decision.</li>
         <li>Continue writing from where the AI left off until your essay reaches <b>at least 500 words</b>, ensuring it has a clear ending.</li>
         <li><b>Edit the writing</b> to make the text written by you and AI coherent and clear.</li>
-        <li>Spend <b>at least 30 minutes</b>.</li>
-        <li>Once you’re done, click the <b>Save</b> button, which will give you a verification code.</li>
-        <li>Copy and paste your full essay and verification code below.</li>
+        <li>Spend <b>at least 40 minutes</b>.</li>
+        <li>Once you’re done, click the <b>Save</b> button.</li>
       </ul>
     `,
     e: `
@@ -76,7 +72,6 @@ $(function() {
         <li>Your essay should be <b>at least 500 words</b>, ensuring it has a clear ending.</li>
         <li>Spend <b>at least 40 minutes</b>.</li>
         <li>Once you’re done, click the <b>Save</b> button, which will give you a verification code.</li>
-        <li>Copy and paste your essay and verification code below.</li>
       </ul>
     `
   };
