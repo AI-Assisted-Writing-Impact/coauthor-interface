@@ -159,6 +159,10 @@ function setupEditorMachineOnly() {
     tab: {
       key: 9,
       handler: function() {
+      const type = getUrlParameter('type'); // 获取 URL 中的 type 参数
+        if (type === 'a') {
+            return;
+        }
         logEvent(EventName.SUGGESTION_GET, EventSource.USER);
         queryGPT3();
       }
@@ -239,6 +243,9 @@ function setupEditor() {
       handler: function() {
         logEvent(EventName.SUGGESTION_GET, EventSource.USER);
         const type = getUrlParameter('type'); // 获取 URL 中的 type 参数
+        if (type === 'a') {
+            return;
+        }
         const text = quill.getText().trim(); // 获取编辑器的文本
         const wordCount = text.length > 0 ? text.split(/\s+/).filter(word => word.length > 0).length : 0;
 
