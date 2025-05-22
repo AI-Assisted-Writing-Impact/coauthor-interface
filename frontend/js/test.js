@@ -6,8 +6,8 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log("Document loaded. Initializing test editor...");
 
     const type = getUrlParameter('type'); // 获取 URL 中的 type 参数
-    const topic = getUrlParameter('topic'); // 获取 URL 中的 topic 参数
 
+    const currentParams = window.location.search; // 获取当前 URL 参数部分（包括 ?）
 
     // Show or hide specific functions based on the type parameter
       if (type === 'a') {
@@ -210,6 +210,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     document.getElementById("next-page-btn").addEventListener("click", function () {
-        window.location.href = "index.html?access_code=demo&type=" + type + "&topic=" + topic;
+        window.location.href = "index.html" + currentParams;
     });
 });
