@@ -63,7 +63,9 @@ async function endSession(type) {
   $('#verification-code').removeClass('do-not-display');
   $('#verification-code').html('Verification code: ' + verificationCode);
   $('#next-btn').removeClass('do-not-display');
-  window.location.replace(`feedback.html?access_code=demo&type=${type}&code=${verificationCode}`);
+  const currentParams = window.location.search; // 获取当前 URL 参数部分（包括 ?）
+
+  window.location.replace(`feedback.html${currentParams}&code=${verificationCode}`);
 }
 
 async function endSessionWithReplay() {
@@ -345,12 +347,7 @@ function queryGPT3() {
   const doc = getText();
   const exampleText = exampleActualText;
   // 定义 instructions 和 prompt
-  const instructions = `In this task, you will write two essays in response to two different prompts. Please follow these guidelines:
-Write naturally and spontaneously, and avoid overthinking or making the writing overly formal.
-Each essay should be at least 500 words.
-Do not use any editing tools, grammar checkers, or other external resources to assist your writing.
-Spend no more than 40 minutes per essay.
-You will see each prompt one at a time. Once you finish the first essay, you will proceed to the second prompt.`;
+    const instructions = document.getElementById('instructions-content').textContent;
 
    const topic = getUrlParameter('topic'); // 从 URL 获取 type
     const prompt = prompts[topic] || "No matching prompt found."; // 使用 prompts.js 中的内容
@@ -436,12 +433,8 @@ function queryGPT4ForSuggestions() {
     return;
   }
 
-  const instructions = `In this task, you will write two essays in response to two different prompts. Please follow these guidelines:
-Write naturally and spontaneously, and avoid overthinking or making the writing overly formal.
-Each essay should be at least 500 words.
-Do not use any editing tools, grammar checkers, or other external resources to assist your writing.
-Spend no more than 40 minutes per essay.
-You will see each prompt one at a time. Once you finish the first essay, you will proceed to the second prompt.`;
+  const instructions = document.getElementById('instructions-content').textContent;
+
     const topic = getUrlParameter('topic'); // 从 URL 获取 type
     const prompt = prompts[topic] || "No matching prompt found."; // 使用 prompts.js 中的内容
 

@@ -83,7 +83,10 @@ document.getElementById('user-info-form').addEventListener('submit', async funct
 
   const type = new URLSearchParams(window.location.search).get('type') || 'a';
   const code = getUrlParameter('code'); // get type from the url
+  const PROLIFIC_PID = getUrlParameter('PROLIFIC_PID'); // 获取 URL 中的 type 参数
+
   formData.code = code;
+  formData.PROLIFIC_PID = PROLIFIC_PID;
   const missingFields = validateFormData(formData);
     if (missingFields.length > 0) {
       const fieldNames = {
@@ -109,6 +112,7 @@ document.getElementById('user-info-form').addEventListener('submit', async funct
 
       return;
     }
+
 
   $.ajax({
     url: serverURL + '/api/save_user_info',
