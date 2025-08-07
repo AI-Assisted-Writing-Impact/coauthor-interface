@@ -13,10 +13,10 @@ $(function() {
       <p><b>Instructions: </b>In this task, you will write using an AI-powered writing assistant that provides grammar and style suggestions. Please write naturally and spontaneously. Do not use any external resources to assist your writing. </p>
       <p>Please follow these guidelines:</p>
       <ul>
-        <li>When you need suggestions for grammar and style while you write, press <b>F1</b>(Windows) or <b>fn + F1</b> (Mac). You can accept, revise, or reject the suggestions.</li>
-        <li>Use this grammar and style suggestions function <b>at least 5 times</b>.</li>
+        <li>When you need suggestions for grammar and style while you write, press <b>F1 (Windows)</b> or <b>fn + F1 (Mac)</b>. You can <b>accept, revise,</b> or <b>reject</b> the suggestions.</li>
+        <li>Use this grammar and style suggestion function <b>at least 5 times during the writing process</b>, not after finishing your essay.</li>
         <li>Your essay should be <b>at least 500 words</b>, ensuring it has a clear ending.</li>
-        <li>Spend <b>at least 40 minutes</b>.</li>
+        <li>Spend <b>at least 30 minutes</b>.</li>
         <li>Once you’re done, click the <b>Save</b> button.</li>
       </ul>
     `,
@@ -49,7 +49,7 @@ $(function() {
         <li>Press the <b>Tab</b> key <b>at the beginning</b> to generate the first half of your essay (about 250 words). You can <b>accept</b>, <b>revise</b>, or <b>reject</b> the AI-generated text, but be sure to <b>read it carefully</b> before making your decision.</li>
         <li>Continue writing from where the AI left off until your essay reaches <b>at least 500 words</b>, ensuring it has a clear ending.</li>
         <li><b>Edit the writing</b> to make the text written by you and AI coherent and clear.</li>
-        <li>Spend <b>at least 40 minutes</b>.</li>
+        <li>Spend <b>at least 30 minutes</b>.</li>
         <li>Once you’re done, click the <b>Save</b> button.</li>
       </ul>
     `,
@@ -58,7 +58,7 @@ $(function() {
       <p>Please follow these guidelines:</p>
       <ul>
         <li>Your essay should be <b>at least 500 words</b>, ensuring it has a clear ending.</li>
-        <li>Spend <b>at least 40 minutes</b>.</li>
+        <li>Spend <b>at least 30 minutes</b>.</li>
         <li>Once you’re done, click the <b>Save</b> button, which will give you a verification code.</li>
         <li>Copy and paste your full essay and verification code below.</li>
       </ul>
@@ -68,10 +68,10 @@ $(function() {
       <p>Please follow these guidelines:</p>
       <ul>
         <li>If you want the AI to continue an unfinished sentence with 3-5 words, press the <b>Tab</b> key. You can <b>accept</b>, <b>revise</b>, or <b>reject</b> the continuation.</li>
-        <li>Use the sentence continuation/generation function <b>at least 5 times</b>.</li>
+        <li>Use the phrase continuation function <b>at least 5 times during the writing process,</b> not after finishing your essay.</li>
         <li>Your essay should be <b>at least 500 words</b>, ensuring it has a clear ending.</li>
-        <li>Spend <b>at least 40 minutes</b>.</li>
-        <li>Once you’re done, click the <b>Save</b> button, which will give you a verification code.</li>
+        <li>Spend <b>at least 30 minutes</b>.</li>
+        <li>Once you’re done, click the <b>Save</b> button.</li>
       </ul>
     `
   };
