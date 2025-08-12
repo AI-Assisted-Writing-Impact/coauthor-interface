@@ -312,12 +312,11 @@ def query():
             model=engine,
             messages=messages,
             n=3 if query_type != 'grammar' else 1,
-            max_tokens=max_tokens,
-            temperature=temperature,
+            max_completion_tokens=max_tokens,
             top_p=top_p,
-            presence_penalty=presence_penalty,
-            frequency_penalty=frequency_penalty,
-            stop=["\n"] if query_type != 'grammar' and query_type != 'c' and query_type != 'd' else None  # Ensure one sentence for default query
+            # presence_penalty=presence_penalty,
+            # frequency_penalty=frequency_penalty,
+            # stop=["\n"] if query_type != 'grammar' and query_type != 'c' and query_type != 'd' else None  # Ensure one sentence for default query
         )
         print(response, 'response')
 
