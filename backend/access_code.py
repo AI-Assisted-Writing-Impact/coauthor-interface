@@ -12,7 +12,7 @@ class AccessCodeConfig:
         self.domain = 'demo'
         self.example = 'na'
         self.prompt = 'na'
-        self.engine = 'gpt-4o'
+        self.engine = 'gpt-5-chat-latest'
 
         self.session_length = 0
 
