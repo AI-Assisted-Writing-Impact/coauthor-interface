@@ -19,11 +19,11 @@ class AccessCodeConfig:
         self.n = 3
         self.max_tokens = 1000
         # self.temperature = 0.95
-        self.temperature = 0.7,  # 调低 temperature 使回答更稳定
+        self.temperature = 0.7  # 调低 temperature 使回答更稳定
 
         self.top_p = 1
         # self.presence_penalty = 0.5
-        self.presence_penalty = 0.3,  # 调低重复惩罚，鼓励更多样的建议
+        self.presence_penalty = 0.3  # 调低重复惩罚，鼓励更多样的建议
 
         self.frequency_penalty = 0.5
         self.stop = ['.']
