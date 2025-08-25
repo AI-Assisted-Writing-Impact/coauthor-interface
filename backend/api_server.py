@@ -309,7 +309,7 @@ def query():
             ]
     try:
         response = openai.ChatCompletion.create(
-            model=engine,
+            model=config.engine,  #original: model=engine,
             messages=messages,
             n=3 if query_type != 'grammar' else 1,
             max_tokens=max_tokens,
