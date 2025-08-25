@@ -12,7 +12,7 @@ class AccessCodeConfig:
         self.domain = 'demo'
         self.example = 'na'
         self.prompt = 'na'
-        self.engine = 'gpt-4.1-2025-04-14' #gpt-4o-2024-11-20 works fine
+        self.engine = 'gpt-4o-2024-11-20' #gpt-4.1-2025-04-14 doesn't work
 
         self.session_length = 0
 
