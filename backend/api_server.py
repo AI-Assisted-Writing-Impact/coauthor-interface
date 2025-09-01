@@ -283,7 +283,7 @@ def query():
             messages = [
                 {
                     "role": "system",
-                    "content": "You are an AI writing assistant. Continue the following text by adding 3-5 words in a coherent and natural way, expanding the ideas logically. Do not provide explanations."
+                    "content": "You are an AI writing assistant. Continue the following text by adding 3 to 5 words in a coherent and natural way, expanding the ideas logically. Do not provide explanations. Don't repeat suggestions."
                                f"{instructions}\n\n"
                                f"Prompt:\n{prompt_text}\n\n"
                 },
