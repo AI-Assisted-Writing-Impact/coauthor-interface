@@ -12,7 +12,7 @@ class AccessCodeConfig:
         self.domain = 'demo'
         self.example = 'na'
         self.prompt = 'na'
-        self.engine = 'gpt-5-chat-latest' #gpt-4.1-2025-04-14 and gpt-4o-2024-11-20 work
+        self.engine = 'gpt-4.1-2025-04-14' #gpt-4.1-2025-04-14 and gpt-4o-2024-11-20 work; gpt-5-chat-latest doesn't work for f
 
         self.session_length = 0
 
